@@ -10,6 +10,7 @@ using Microsoft.Owin.Security.OAuth;
 using Owin;
 using TennisWithMe_WebApi.Providers;
 using TennisWithMe_WebApi.Models;
+using Microsoft.Owin.Security.Infrastructure;
 
 namespace TennisWithMe_WebApi
 {
@@ -38,7 +39,8 @@ namespace TennisWithMe_WebApi
                 TokenEndpointPath = new PathString("/Token"),
                 Provider = new ApplicationOAuthProvider(PublicClientId),
                 AuthorizeEndpointPath = new PathString("/api/Account/ExternalLogin"),
-                AccessTokenExpireTimeSpan = TimeSpan.FromDays(14),
+                AccessTokenExpireTimeSpan = TimeSpan.FromHours(1), //default 14 days
+                RefreshTokenProvider = new ApplicationRefreshTokenProvider(),
                 // In production mode set AllowInsecureHttp = false
                 AllowInsecureHttp = true
             };
@@ -64,6 +66,23 @@ namespace TennisWithMe_WebApi
             //    ClientId = "",
             //    ClientSecret = ""
             //});
+        }
+    }
+
+    //http://stackoverflow.com/questions/20637674/owin-security-how-to-implement-oauth2-refresh-tokens
+    public class ApplicationRefreshTokenProvider : AuthenticationTokenProvider
+    {
+        public override void Create(AuthenticationTokenCreateContext context)
+        {
+            // Expiration time in days
+            int expire = 30;
+            context.Ticket.Properties.ExpiresUtc = new DateTimeOffset(DateTime.Now.AddDays(expire));
+            context.SetToken(context.SerializeTicket());
+        }
+
+        public override void Receive(AuthenticationTokenReceiveContext context)
+        {
+            context.DeserializeTicket(context.Token);
         }
     }
 }

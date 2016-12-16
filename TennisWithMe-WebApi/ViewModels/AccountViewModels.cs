@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TennisWithMe_WebApi.Models
+namespace TennisWithMe_WebApi.ViewModels
 {
     // Models returned by AccountController actions.
 
