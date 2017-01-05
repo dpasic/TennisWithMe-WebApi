@@ -39,7 +39,7 @@ namespace TennisWithMe_WebApi
                 TokenEndpointPath = new PathString("/Token"),
                 Provider = new ApplicationOAuthProvider(PublicClientId),
                 AuthorizeEndpointPath = new PathString("/api/Account/ExternalLogin"),
-                AccessTokenExpireTimeSpan = TimeSpan.FromHours(1), //default 14 days
+                AccessTokenExpireTimeSpan = TimeSpan.FromDays(14), //default 14 days
                 RefreshTokenProvider = new ApplicationRefreshTokenProvider(),
                 // In production mode set AllowInsecureHttp = false
                 AllowInsecureHttp = true
@@ -75,7 +75,7 @@ namespace TennisWithMe_WebApi
         public override void Create(AuthenticationTokenCreateContext context)
         {
             // Expiration time in days
-            int expire = 30;
+            int expire = 60;
             context.Ticket.Properties.ExpiresUtc = new DateTimeOffset(DateTime.Now.AddDays(expire));
             context.SetToken(context.SerializeTicket());
         }
