@@ -66,11 +66,31 @@ namespace TennisWithMe_WebApi.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("Strangers")]
+        public async Task<IHttpActionResult> GetStrangersForQuery(string query)
+        {
+            string appUserID = User.Identity.GetUserId();
+
+            try
+            {
+                var strangers = await _playerFriendshipsService.GetStrangersForQuery(appUserID, query);
+                var playerModels = _mapperToPlayerModel.Map<List<PlayerViewModel>>(strangers);
+
+                return Ok<List<PlayerViewModel>>(playerModels);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost]
         [Route("RequestFriendship")]
         public async Task<IHttpActionResult> RequestFriendship(PlayersFriendshipViewModel model)
         {
             string appUserID = User.Identity.GetUserId();
+            model.PlayerOneId = (model.PlayerOneId == null) ? appUserID : model.PlayerOneId;
 
             try
             {
@@ -90,6 +110,7 @@ namespace TennisWithMe_WebApi.Controllers
         public async Task<IHttpActionResult> ConfirmFriendship(PlayersFriendshipViewModel model)
         {
             string appUserID = User.Identity.GetUserId();
+            model.PlayerOneId = (model.PlayerOneId == null) ? appUserID : model.PlayerOneId;
 
             try
             {

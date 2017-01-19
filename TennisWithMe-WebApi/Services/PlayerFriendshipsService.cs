@@ -29,8 +29,13 @@ namespace TennisWithMe_WebApi.Services
             {
                 return await Task.Run(() =>
                 {
-                    var friends = db.PlayersFriendships.Where(x => x.PlayerOneId == appUserId && x.IsActive == true).Select(x => x.PlayerTwo).ToList();
-                    return friends;
+                    var friendsCollection = db.PlayersFriendships.Where(x => (x.PlayerOneId == appUserId || x.PlayerTwoId == appUserId) && x.IsActive == true);
+                    var friendsPart1 = friendsCollection.Where(x => x.PlayerOneId == appUserId).Select(x => x.PlayerTwo).ToList();
+                    var friendsPart2 = friendsCollection.Where(x => x.PlayerTwoId == appUserId).Select(x => x.PlayerOne).ToList();
+
+                    friendsPart1.AddRange(friendsPart2);
+                    //var friends = db.PlayersFriendships.Where(x => (x.PlayerOneId == appUserId || x.PlayerTwoId == appUserId) && x.IsActive == true).Select(x => x.PlayerTwo).ToList();
+                    return friendsPart1;
                 });
             }
         }
@@ -43,6 +48,28 @@ namespace TennisWithMe_WebApi.Services
                 {
                     var friends = db.PlayersFriendships.Where(x => x.PlayerOneId == appUserId && x.IsConfirmed == false).Select(x => x.PlayerTwo).ToList();
                     return friends;
+                });
+            }
+        }
+
+        public async Task<List<Player>> GetStrangersForQuery(string appUserID, string query)
+        {
+            using (var db = new ApplicationDbContext())
+            {
+                return await Task.Run(() =>
+                {
+                    var users = db.Users.Where(x => x.UserName.ToLower().Contains(query.ToLower()) && x.Id != appUserID).ToList();
+                    var friendships = db.PlayersFriendships.Where(x => x.PlayerOneId == appUserID || x.PlayerTwoId == appUserID).ToList();
+
+                    var friendshipsIds = new HashSet<string>();
+                    foreach (var item in friendships)
+                    {
+                        friendshipsIds.Add(item.PlayerOneId);
+                        friendshipsIds.Add(item.PlayerTwoId);
+                    }
+
+                    var strangers = users.Where(x => !friendshipsIds.Contains(x.Id)).ToList();
+                    return strangers;
                 });
             }
         }
