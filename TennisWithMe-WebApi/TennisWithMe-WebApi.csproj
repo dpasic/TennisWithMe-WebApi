@@ -239,12 +239,16 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PlayersController.cs" />
+    <Compile Include="Controllers\MatchesController.cs" />
     <Compile Include="Controllers\PlayerFriendshipsController.cs" />
     <Compile Include="Controllers\IdentityPlayerController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Services\MatchesService.cs" />
+    <Compile Include="Services\PlayersService.cs" />
     <Compile Include="Services\PlayerFriendshipsService.cs" />
     <Compile Include="Services\IdentityPlayerService.cs" />
     <Compile Include="ViewModels\AccountBindingModels.cs" />
