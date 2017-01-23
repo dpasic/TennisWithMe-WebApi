@@ -22,5 +22,17 @@ namespace TennisWithMe_WebApi.Services
                 return _matchesService;
             }
         }
+
+        public async Task RequestMatch(Match match)
+        {
+            using (var db = new ApplicationDbContext())
+            {
+                await Task.Run(() =>
+                {
+                    db.Matches.Add(match);
+                    db.SaveChanges();
+                });
+            }
+        }
     }
 }

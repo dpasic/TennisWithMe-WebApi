@@ -46,8 +46,13 @@ namespace TennisWithMe_WebApi.Services
             {
                 return await Task.Run(() =>
                 {
-                    var friends = db.PlayersFriendships.Where(x => x.PlayerOneId == appUserId && x.IsConfirmed == false).Select(x => x.PlayerTwo).ToList();
-                    return friends;
+                    var friendsCollection = db.PlayersFriendships.Where(x => (x.PlayerOneId == appUserId || x.PlayerTwoId == appUserId) && x.IsConfirmed == false);
+                    var friendsPart1 = friendsCollection.Where(x => x.PlayerOneId == appUserId).Select(x => x.PlayerTwo).ToList();
+                    var friendsPart2 = friendsCollection.Where(x => x.PlayerTwoId == appUserId).Select(x => x.PlayerOne).ToList();
+
+                    friendsPart1.AddRange(friendsPart2);
+                    //var friends = db.PlayersFriendships.Where(x => x.PlayerOneId == appUserId && x.IsConfirmed == false).Select(x => x.PlayerTwo).ToList();
+                    return friendsPart1;
                 });
             }
         }
