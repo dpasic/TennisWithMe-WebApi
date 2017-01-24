@@ -18,51 +18,53 @@ namespace TennisWithMe_WebApi.Controllers
     public class MatchesController : ApiController
     {
         private MatchesService _matchesService;
-        private IMapper _mapper;
+        private IMapper _mapperToMatchModel;
+        private IMapper _mapperToMatch;
 
         public MatchesController()
         {
             _matchesService = MatchesService.Instance;
-            _mapper = new MapperConfiguration(cfg => cfg.CreateMap<Match, MatchViewModel>()).CreateMapper();
+            _mapperToMatchModel = new MapperConfiguration(cfg => cfg.CreateMap<Match, MatchViewModel>()).CreateMapper();
+            _mapperToMatch = new MapperConfiguration(cfg => cfg.CreateMap<MatchViewModel, Match>()).CreateMapper();
         }
 
-        //[HttpGet]
-        //[Route("Active")]
-        //public async Task<IHttpActionResult> GetActiveFriends()
-        //{
-        //    string appUserID = User.Identity.GetUserId();
+        [HttpGet]
+        [Route("Active")]
+        public async Task<IHttpActionResult> GetActiveMatches()
+        {
+            string appUserID = User.Identity.GetUserId();
 
-        //    try
-        //    {
-        //        var activeFriends = await _playerFriendshipsService.GetActiveFriendsForId(appUserID);
-        //        var playerModels = _mapperToPlayerModel.Map<List<PlayerViewModel>>(activeFriends);
+            try
+            {
+                var activeMatches = await _matchesService.GetActiveMatchesForId(appUserID);
+                var matchesModels = _mapperToMatchModel.Map<List<MatchViewModel>>(activeMatches);
 
-        //        return Ok<List<PlayerViewModel>>(playerModels);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
+                return Ok<List<MatchViewModel>>(matchesModels);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
-        //[HttpGet]
-        //[Route("Requested")]
-        //public async Task<IHttpActionResult> GetRequestedFriends()
-        //{
-        //    string appUserID = User.Identity.GetUserId();
+        [HttpGet]
+        [Route("Requested")]
+        public async Task<IHttpActionResult> GetRequestedMatches()
+        {
+            string appUserID = User.Identity.GetUserId();
 
-        //    try
-        //    {
-        //        var requestedFriends = await _playerFriendshipsService.GetRequestedFriendsForId(appUserID);
-        //        var playerModels = _mapperToPlayerModel.Map<List<PlayerViewModel>>(requestedFriends);
+            try
+            {
+                var requestedMatches = await _matchesService.GetRequestedMatchesForId(appUserID);
+                var matchesModels = _mapperToMatchModel.Map<List<MatchViewModel>>(requestedMatches);
 
-        //        return Ok<List<PlayerViewModel>>(playerModels);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
+                return Ok<List<MatchViewModel>>(matchesModels);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         [HttpPost]
         [Route("RequestMatch")]
@@ -73,7 +75,7 @@ namespace TennisWithMe_WebApi.Controllers
 
             try
             {
-                var match = _mapper.Map<Match>(model);
+                var match = _mapperToMatch.Map<Match>(model);
                 await _matchesService.RequestMatch(match);
 
                 return Ok();
@@ -84,24 +86,24 @@ namespace TennisWithMe_WebApi.Controllers
             }
         }
 
-        //[HttpPut]
-        //[Route("ConfirmFriendship")]
-        //public async Task<IHttpActionResult> ConfirmFriendship(PlayersFriendshipViewModel model)
-        //{
-        //    string appUserID = User.Identity.GetUserId();
-        //    model.PlayerOneId = (model.PlayerOneId == null) ? appUserID : model.PlayerOneId;
+        [HttpPut]
+        [Route("ConfirmMatch")]
+        public async Task<IHttpActionResult> ConfirmMatch(MatchViewModel model)
+        {
+            string appUserID = User.Identity.GetUserId();
+            model.PlayerOneId = (model.PlayerOneId == null) ? appUserID : model.PlayerOneId;
 
-        //    try
-        //    {
-        //        var friendship = _mapperToFriendship.Map<PlayersFriendship>(model);
-        //        await _playerFriendshipsService.ConfirmPlayersFriendship(friendship);
+            try
+            {
+                var match = _mapperToMatch.Map<Match>(model);
+                await _matchesService.ConfirmMatch(match);
 
-        //        return Ok();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

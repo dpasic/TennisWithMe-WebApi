@@ -23,6 +23,30 @@ namespace TennisWithMe_WebApi.Services
             }
         }
 
+        public async Task<List<Match>> GetActiveMatchesForId(string appUserId)
+        {
+            using (var db = new ApplicationDbContext())
+            {
+                return await Task.Run(() =>
+                {
+                    var matches = db.Matches.Where(x => (x.PlayerOneId == appUserId || x.PlayerTwoId == appUserId) && x.IsConfirmed == true).ToList();
+                    return matches;
+                });
+            }
+        }
+
+        public async Task<List<Match>> GetRequestedMatchesForId(string appUserId)
+        {
+            using (var db = new ApplicationDbContext())
+            {
+                return await Task.Run(() =>
+                {
+                    var matches = db.Matches.Where(x => (x.PlayerOneId == appUserId || x.PlayerTwoId == appUserId) && x.IsConfirmed == false).ToList();
+                    return matches;
+                });
+            }
+        }
+
         public async Task RequestMatch(Match match)
         {
             using (var db = new ApplicationDbContext())
@@ -30,6 +54,21 @@ namespace TennisWithMe_WebApi.Services
                 await Task.Run(() =>
                 {
                     db.Matches.Add(match);
+                    db.SaveChanges();
+                });
+            }
+        }
+
+        public async Task ConfirmMatch(Match match)
+        {
+            using (var db = new ApplicationDbContext())
+            {
+                await Task.Run(() =>
+                {
+                    var targetMatch = db.Matches.Find(match.Id);
+                    targetMatch.IsConfirmed = true;
+                    targetMatch.IsPlayed = true;
+
                     db.SaveChanges();
                 });
             }

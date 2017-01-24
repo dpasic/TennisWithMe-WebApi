@@ -25,7 +25,7 @@ namespace TennisWithMe_WebApi.ViewModels
         public string PlayerOneComment { get; set; }
         public string PlayerTwoComment { get; set; }
 
-        public DateTime DatePlayed { get; set; }
+        public long TimestampPlayed { get; set; }
         public string CityPlayed { get; set; }
     }
 }
