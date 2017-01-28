@@ -44,5 +44,23 @@ namespace TennisWithMe_WebApi.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPut]
+        [Route("")]
+        public async Task<IHttpActionResult> UpdateIdentityPlayer(PlayerViewModel model)
+        {
+            string appUserId = User.Identity.GetUserId();
+
+            try
+            {
+                await _identityPlayerService.UpdateIdentityPlayerForId(appUserId, model);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

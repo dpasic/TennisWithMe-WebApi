@@ -27,5 +27,8 @@ namespace TennisWithMe_WebApi.ViewModels
 
         public long TimestampPlayed { get; set; }
         public string CityPlayed { get; set; }
+
+        //Used in client
+        public bool IsMatchReceived { get; set; }
     }
 }

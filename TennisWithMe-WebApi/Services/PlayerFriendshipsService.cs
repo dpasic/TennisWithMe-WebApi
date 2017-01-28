@@ -34,25 +34,22 @@ namespace TennisWithMe_WebApi.Services
                     var friendsPart2 = friendsCollection.Where(x => x.PlayerTwoId == appUserId).Select(x => x.PlayerOne).ToList();
 
                     friendsPart1.AddRange(friendsPart2);
-                    //var friends = db.PlayersFriendships.Where(x => (x.PlayerOneId == appUserId || x.PlayerTwoId == appUserId) && x.IsActive == true).Select(x => x.PlayerTwo).ToList();
                     return friendsPart1;
                 });
             }
         }
 
-        public async Task<List<Player>> GetRequestedFriendsForId(string appUserId)
+        public async Task<List<Player>[]> GetRequestedFriendsForId(string appUserId)
         {
             using (var db = new ApplicationDbContext())
             {
                 return await Task.Run(() =>
                 {
                     var friendsCollection = db.PlayersFriendships.Where(x => (x.PlayerOneId == appUserId || x.PlayerTwoId == appUserId) && x.IsConfirmed == false);
-                    var friendsPart1 = friendsCollection.Where(x => x.PlayerOneId == appUserId).Select(x => x.PlayerTwo).ToList();
-                    var friendsPart2 = friendsCollection.Where(x => x.PlayerTwoId == appUserId).Select(x => x.PlayerOne).ToList();
+                    var friendsPartRequested = friendsCollection.Where(x => x.PlayerOneId == appUserId).Select(x => x.PlayerTwo).ToList();
+                    var friendsPartReceived = friendsCollection.Where(x => x.PlayerTwoId == appUserId).Select(x => x.PlayerOne).ToList();
 
-                    friendsPart1.AddRange(friendsPart2);
-                    //var friends = db.PlayersFriendships.Where(x => x.PlayerOneId == appUserId && x.IsConfirmed == false).Select(x => x.PlayerTwo).ToList();
-                    return friendsPart1;
+                    return new List<Player>[] { friendsPartRequested, friendsPartReceived };
                 });
             }
         }

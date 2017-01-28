@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using TennisWithMe_WebApi.Models;
+using TennisWithMe_WebApi.ViewModels;
 
 namespace TennisWithMe_WebApi.Services
 {
@@ -68,6 +69,25 @@ namespace TennisWithMe_WebApi.Services
                     var targetMatch = db.Matches.Find(match.Id);
                     targetMatch.IsConfirmed = true;
                     targetMatch.IsPlayed = true;
+
+                    db.SaveChanges();
+                });
+            }
+        }
+
+        public async Task UpdateMatch(MatchViewModel model)
+        {
+            using (var db = new ApplicationDbContext())
+            {
+                await Task.Run(() =>
+                {
+                    var targetMatch = db.Matches.Find(model.Id);
+
+                    targetMatch.CityPlayed = model.CityPlayed;
+                    targetMatch.Comment = model.CityPlayed;
+                    targetMatch.Rating = model.Rating;
+                    targetMatch.Result = model.Result;
+                    targetMatch.TimestampPlayed = model.TimestampPlayed;
 
                     db.SaveChanges();
                 });

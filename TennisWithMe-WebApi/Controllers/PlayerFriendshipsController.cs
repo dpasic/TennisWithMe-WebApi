@@ -55,10 +55,14 @@ namespace TennisWithMe_WebApi.Controllers
 
             try
             {
-                var requestedFriends = await _playerFriendshipsService.GetRequestedFriendsForId(appUserID);
-                var playerModels = _mapperToPlayerModel.Map<List<PlayerViewModel>>(requestedFriends);
+                var requestedFriendsParts = await _playerFriendshipsService.GetRequestedFriendsForId(appUserID);
+                var friendsPartRequestedModels = _mapperToPlayerModel.Map<List<PlayerViewModel>>(requestedFriendsParts[0]);
+                var friendsPartReceivedModels = _mapperToPlayerModel.Map<List<PlayerViewModel>>(requestedFriendsParts[1]);
 
-                return Ok<List<PlayerViewModel>>(playerModels);
+                friendsPartReceivedModels.ForEach(x => x.IsFriendshipReceived = true);
+
+                friendsPartRequestedModels.AddRange(friendsPartReceivedModels);
+                return Ok<List<PlayerViewModel>>(friendsPartRequestedModels);
             }
             catch (Exception ex)
             {

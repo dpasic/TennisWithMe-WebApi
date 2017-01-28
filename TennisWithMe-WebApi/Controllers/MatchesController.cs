@@ -58,6 +58,11 @@ namespace TennisWithMe_WebApi.Controllers
                 var requestedMatches = await _matchesService.GetRequestedMatchesForId(appUserID);
                 var matchesModels = _mapperToMatchModel.Map<List<MatchViewModel>>(requestedMatches);
 
+                foreach (var match in matchesModels.Where(x => x.PlayerTwoId == appUserID))
+                {
+                    match.IsMatchReceived = true;
+                }
+
                 return Ok<List<MatchViewModel>>(matchesModels);
             }
             catch (Exception ex)
@@ -97,6 +102,22 @@ namespace TennisWithMe_WebApi.Controllers
             {
                 var match = _mapperToMatch.Map<Match>(model);
                 await _matchesService.ConfirmMatch(match);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut]
+        [Route("UpdateMatch")]
+        public async Task<IHttpActionResult> UpdateMatch(MatchViewModel model)
+        {
+            try
+            {
+                await _matchesService.UpdateMatch(model);
 
                 return Ok();
             }

@@ -24,5 +24,8 @@ namespace TennisWithMe_WebApi.ViewModels
 
         public string Skill { get; set; }
         public double? Rating { get; set; }
+
+        //Used in client
+        public bool IsFriendshipReceived { get; set; }
     }
 }
