@@ -94,7 +94,8 @@ namespace TennisWithMe_WebApi.Services
             {
                 await Task.Run(() =>
                 {
-                    var targetFriendship = db.PlayersFriendships.SingleOrDefault(x => x.PlayerOneId == friendship.PlayerOneId && x.PlayerTwoId == friendship.PlayerTwoId);
+                    var targetFriendship = db.PlayersFriendships.SingleOrDefault(x => (x.PlayerOneId == friendship.PlayerOneId && x.PlayerTwoId == friendship.PlayerTwoId)
+                        || (x.PlayerOneId == friendship.PlayerTwoId && x.PlayerTwoId == friendship.PlayerOneId));
                     targetFriendship.IsConfirmed = true;
                     targetFriendship.IsActive = true;
 
