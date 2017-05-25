@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using TennisWithMe_WebApi.Aspects;
 using TennisWithMe_WebApi.Models;
 
 namespace TennisWithMe_WebApi.Services
@@ -23,6 +24,7 @@ namespace TennisWithMe_WebApi.Services
             }
         }
 
+        [TimerAspect]
         public async Task<List<Player>> GetPlayersByQueries(string appUserID, string city, string gender, string skill)
         {
             using (var db = new ApplicationDbContext())
