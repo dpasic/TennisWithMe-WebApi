@@ -1,4 +1,5 @@
-﻿using System;
+﻿using TennisWithMe_WebApi.Aspects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,6 +25,7 @@ namespace TennisWithMe_WebApi.Services
             }
         }
 
+        [LoggerAspect]
         public async Task<List<Match>> GetActiveMatchesForId(string appUserId)
         {
             using (var db = new ApplicationDbContext())
@@ -36,6 +38,7 @@ namespace TennisWithMe_WebApi.Services
             }
         }
 
+        [LoggerAspect]
         public async Task<List<Match>> GetRequestedMatchesForId(string appUserId)
         {
             using (var db = new ApplicationDbContext())
@@ -48,6 +51,7 @@ namespace TennisWithMe_WebApi.Services
             }
         }
 
+        [LoggerAspect]
         public async Task RequestMatch(Match match)
         {
             using (var db = new ApplicationDbContext())
@@ -60,6 +64,7 @@ namespace TennisWithMe_WebApi.Services
             }
         }
 
+        [LoggerAspect]
         public async Task ConfirmMatch(Match match)
         {
             using (var db = new ApplicationDbContext())
@@ -75,6 +80,7 @@ namespace TennisWithMe_WebApi.Services
             }
         }
 
+        [LoggerAspect]
         public async Task UpdateMatch(MatchViewModel model)
         {
             using (var db = new ApplicationDbContext())

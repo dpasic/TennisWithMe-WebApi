@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity;
 using TennisWithMe_WebApi.ViewModels;
 using TennisWithMe_WebApi.Services;
 using AutoMapper;
+using TennisWithMe_WebApi.Aspects;
 
 namespace TennisWithMe_WebApi.Controllers
 {
@@ -30,6 +31,7 @@ namespace TennisWithMe_WebApi.Controllers
 
         [HttpGet]
         [Route("Active")]
+        [TimerAspect]
         public async Task<IHttpActionResult> GetActiveMatches()
         {
             string appUserID = User.Identity.GetUserId();
@@ -49,6 +51,7 @@ namespace TennisWithMe_WebApi.Controllers
 
         [HttpGet]
         [Route("Requested")]
+        [TimerAspect]
         public async Task<IHttpActionResult> GetRequestedMatches()
         {
             string appUserID = User.Identity.GetUserId();
@@ -73,6 +76,7 @@ namespace TennisWithMe_WebApi.Controllers
 
         [HttpPost]
         [Route("RequestMatch")]
+        [TimerAspect]
         public async Task<IHttpActionResult> RequestMatch(MatchViewModel model)
         {
             string appUserID = User.Identity.GetUserId();
@@ -93,6 +97,7 @@ namespace TennisWithMe_WebApi.Controllers
 
         [HttpPut]
         [Route("ConfirmMatch")]
+        [TimerAspect]
         public async Task<IHttpActionResult> ConfirmMatch(MatchViewModel model)
         {
             string appUserID = User.Identity.GetUserId();
@@ -113,6 +118,7 @@ namespace TennisWithMe_WebApi.Controllers
 
         [HttpPut]
         [Route("UpdateMatch")]
+        [TimerAspect]
         public async Task<IHttpActionResult> UpdateMatch(MatchViewModel model)
         {
             try

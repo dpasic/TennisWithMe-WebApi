@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity;
 using TennisWithMe_WebApi.ViewModels;
 using TennisWithMe_WebApi.Services;
 using AutoMapper;
+using TennisWithMe_WebApi.Aspects;
 
 namespace TennisWithMe_WebApi.Controllers
 {
@@ -30,6 +31,7 @@ namespace TennisWithMe_WebApi.Controllers
 
         [HttpGet]
         [Route("Active")]
+        [TimerAspect]
         public async Task<IHttpActionResult> GetActiveFriends()
         {
             string appUserID = User.Identity.GetUserId();
@@ -49,6 +51,7 @@ namespace TennisWithMe_WebApi.Controllers
 
         [HttpGet]
         [Route("Requested")]
+        [TimerAspect]
         public async Task<IHttpActionResult> GetRequestedFriends()
         {
             string appUserID = User.Identity.GetUserId();
@@ -72,6 +75,7 @@ namespace TennisWithMe_WebApi.Controllers
 
         [HttpGet]
         [Route("Strangers")]
+        [TimerAspect]
         public async Task<IHttpActionResult> GetStrangersForQuery(string query)
         {
             string appUserID = User.Identity.GetUserId();
@@ -91,6 +95,7 @@ namespace TennisWithMe_WebApi.Controllers
 
         [HttpPost]
         [Route("RequestFriendship")]
+        [TimerAspect]
         public async Task<IHttpActionResult> RequestFriendship(PlayersFriendshipViewModel model)
         {
             string appUserID = User.Identity.GetUserId();
@@ -111,6 +116,7 @@ namespace TennisWithMe_WebApi.Controllers
 
         [HttpPut]
         [Route("ConfirmFriendship")]
+        [TimerAspect]
         public async Task<IHttpActionResult> ConfirmFriendship(PlayersFriendshipViewModel model)
         {
             string appUserID = User.Identity.GetUserId();
