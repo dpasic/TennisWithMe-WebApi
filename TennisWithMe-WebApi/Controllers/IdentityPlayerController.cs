@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity;
 using TennisWithMe_WebApi.ViewModels;
 using TennisWithMe_WebApi.Services;
 using AutoMapper;
+using TennisWithMe_WebApi.Aspects;
 
 namespace TennisWithMe_WebApi.Controllers
 {
@@ -28,6 +29,7 @@ namespace TennisWithMe_WebApi.Controllers
 
         [HttpGet]
         [Route("")]
+        [TimerAspect]
         public async Task<IHttpActionResult> GetIdentityPlayer()
         {
             string appUserId = User.Identity.GetUserId();
@@ -47,6 +49,7 @@ namespace TennisWithMe_WebApi.Controllers
 
         [HttpPut]
         [Route("")]
+        [TimerAspect]
         public async Task<IHttpActionResult> UpdateIdentityPlayer(PlayerViewModel model)
         {
             string appUserId = User.Identity.GetUserId();

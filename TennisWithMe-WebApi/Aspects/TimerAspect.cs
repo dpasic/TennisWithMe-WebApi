@@ -11,22 +11,22 @@ namespace TennisWithMe_WebApi.Aspects
     public class TimerAspect : OnMethodBoundaryAspect
     {
         [NonSerialized]
-        private Stopwatch stopwatch = new Stopwatch();
+        private Stopwatch _stopwatch;
 
         public override void RuntimeInitialize(System.Reflection.MethodBase method)
         {
-            stopwatch = new Stopwatch();
+            _stopwatch = new Stopwatch();
         }
 
         public override void OnEntry(MethodExecutionArgs args)
         {
-            stopwatch.Start();
+            _stopwatch.Start();
         }
 
         public override void OnSuccess(MethodExecutionArgs args)
         {
-            stopwatch.Stop();
-            Console.WriteLine("Method {0}: duration={1}", args.Method.Name, stopwatch.Elapsed);
+            _stopwatch.Stop();
+            Console.WriteLine("Method {0}: duration={1}", args.Method.Name, _stopwatch.Elapsed);
         }
 
     }

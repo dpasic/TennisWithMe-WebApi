@@ -1,4 +1,5 @@
-﻿using System;
+﻿using TennisWithMe_WebApi.Aspects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,6 +24,7 @@ namespace TennisWithMe_WebApi.Services
             }
         }
 
+        [LoggerAspect]
         public async Task<List<Player>> GetActiveFriendsForId(string appUserId)
         {
             using (var db = new ApplicationDbContext())
@@ -39,6 +41,7 @@ namespace TennisWithMe_WebApi.Services
             }
         }
 
+        [LoggerAspect]
         public async Task<List<Player>[]> GetRequestedFriendsForId(string appUserId)
         {
             using (var db = new ApplicationDbContext())
@@ -54,6 +57,7 @@ namespace TennisWithMe_WebApi.Services
             }
         }
 
+        [LoggerAspect]
         public async Task<List<Player>> GetStrangersForQuery(string appUserID, string query)
         {
             using (var db = new ApplicationDbContext())
@@ -76,6 +80,7 @@ namespace TennisWithMe_WebApi.Services
             }
         }
 
+        [LoggerAspect]
         public async Task RequestPlayersFriendship(PlayersFriendship friendship)
         {
             using (var db = new ApplicationDbContext())
@@ -88,6 +93,7 @@ namespace TennisWithMe_WebApi.Services
             }
         }
 
+        [LoggerAspect]
         public async Task ConfirmPlayersFriendship(PlayersFriendship friendship)
         {
             using (var db = new ApplicationDbContext())
