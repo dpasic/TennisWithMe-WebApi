@@ -9,8 +9,40 @@ using TennisWithMe_WebApi.Services.Interfaces;
 
 namespace TennisWithMe_WebApi.Services
 {
-    public class PlayerFriendshipsServiceDb : IPlayerFriendshipsService
+    public class PlayerFriendshipsServiceImpl : IPlayerFriendshipsService
     {
+        private IEnumerable<Player> _players;
+        private IEnumerable<PlayersFriendship> _playersFriendships;
+
+        public PlayerFriendshipsServiceImpl()
+        {
+            _players = null;
+            _playersFriendships = null;
+        }
+        public PlayerFriendshipsServiceImpl(IEnumerable<Player> players, IEnumerable<PlayersFriendship> playersFriendships)
+        {
+            _players = players;
+            _playersFriendships = playersFriendships;
+        }
+
+        private IEnumerable<Player> GetPlayers(ApplicationDbContext db)
+        {
+            if (_players == null)
+            {
+                return db.Users;
+            }
+            return _players;
+        }
+
+        private IEnumerable<PlayersFriendship> GetPlayersFriendships(ApplicationDbContext db)
+        {
+            if (_playersFriendships == null)
+            {
+                return db.PlayersFriendships;
+            }
+            return _playersFriendships;
+        }
+
         [LoggerAspect]
         public async Task<List<Player>> GetActiveFriendsForId(string appUserId)
         {
@@ -18,7 +50,7 @@ namespace TennisWithMe_WebApi.Services
             {
                 return await Task.Run(() =>
                 {
-                    var friendsCollection = db.PlayersFriendships.Where(x => (x.PlayerOneId == appUserId || x.PlayerTwoId == appUserId) && x.IsActive);
+                    var friendsCollection = GetPlayersFriendships(db).Where(x => (x.PlayerOneId == appUserId || x.PlayerTwoId == appUserId) && x.IsActive);
                     var friendsPart1 = friendsCollection.Where(x => x.PlayerOneId == appUserId).Select(x => x.PlayerTwo).ToList();
                     var friendsPart2 = friendsCollection.Where(x => x.PlayerTwoId == appUserId).Select(x => x.PlayerOne).ToList();
 
@@ -35,7 +67,7 @@ namespace TennisWithMe_WebApi.Services
             {
                 return await Task.Run(() =>
                 {
-                    var friendsCollection = db.PlayersFriendships.Where(x => (x.PlayerOneId == appUserId || x.PlayerTwoId == appUserId) && x.IsConfirmed == false);
+                    var friendsCollection = GetPlayersFriendships(db).Where(x => (x.PlayerOneId == appUserId || x.PlayerTwoId == appUserId) && x.IsConfirmed == false);
                     var friendsPartRequested = friendsCollection.Where(x => x.PlayerOneId == appUserId).Select(x => x.PlayerTwo).ToList();
                     var friendsPartReceived = friendsCollection.Where(x => x.PlayerTwoId == appUserId).Select(x => x.PlayerOne).ToList();
 
@@ -51,8 +83,8 @@ namespace TennisWithMe_WebApi.Services
             {
                 return await Task.Run(() =>
                 {
-                    var users = db.Users.Where(x => x.UserName.ToLower().Contains(query.ToLower()) && x.Id != appUserID).ToList();
-                    var friendships = db.PlayersFriendships.Where(x => x.PlayerOneId == appUserID || x.PlayerTwoId == appUserID).ToList();
+                    var users = GetPlayers(db).Where(x => x.UserName.ToLower().Contains(query.ToLower()) && x.Id != appUserID).ToList();
+                    var friendships = GetPlayersFriendships(db).Where(x => x.PlayerOneId == appUserID || x.PlayerTwoId == appUserID).ToList();
 
                     var friendshipsIds = new HashSet<string>();
                     foreach (var item in friendships)
@@ -87,7 +119,7 @@ namespace TennisWithMe_WebApi.Services
             {
                 await Task.Run(() =>
                 {
-                    var targetFriendship = db.PlayersFriendships.SingleOrDefault(x => (x.PlayerOneId == friendship.PlayerOneId && x.PlayerTwoId == friendship.PlayerTwoId)
+                    var targetFriendship = GetPlayersFriendships(db).SingleOrDefault(x => (x.PlayerOneId == friendship.PlayerOneId && x.PlayerTwoId == friendship.PlayerTwoId)
                         || (x.PlayerOneId == friendship.PlayerTwoId && x.PlayerTwoId == friendship.PlayerOneId));
                     targetFriendship.IsConfirmed = true;
                     targetFriendship.IsActive = true;

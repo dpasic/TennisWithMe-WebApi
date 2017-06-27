@@ -16,7 +16,7 @@ namespace TennisWithMe_WebApi.Tests
         public async Task GetAllPlayers_ShouldReturnAllPlayers()
         {
             var testPlayers = GetTestPlayers();
-            var service = new PlayersServiceLocal(testPlayers);
+            var service = new PlayersServiceImpl(testPlayers);
 
             var result = await service.GetPlayersByQueries(string.Empty, string.Empty, string.Empty, string.Empty);
             Assert.AreEqual(testPlayers.Count(), result.Count);
@@ -26,7 +26,7 @@ namespace TennisWithMe_WebApi.Tests
         public async Task GetPlayersFromZagreb_ShouldReturnPlayersFromZagreb()
         {
             var testPlayers = GetTestPlayers();
-            var service = new PlayersServiceLocal(testPlayers);
+            var service = new PlayersServiceImpl(testPlayers);
 
             var result = await service.GetPlayersByQueries(string.Empty, "zagreb", string.Empty, string.Empty);
             Assert.AreEqual(2, result.Count);
@@ -36,7 +36,7 @@ namespace TennisWithMe_WebApi.Tests
         public async Task GetPlayersByQueries_ShouldReturnPlayersByQueries()
         {
             var testPlayers = GetTestPlayers();
-            var service = new PlayersServiceLocal(testPlayers);
+            var service = new PlayersServiceImpl(testPlayers);
 
             var result = await service.GetPlayersByQueries(string.Empty, "rijeka", "male", "former player");
             Assert.AreEqual(1, result.Count);

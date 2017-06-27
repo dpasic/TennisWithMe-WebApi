@@ -25,7 +25,7 @@ namespace TennisWithMe_WebApi.Controllers
 
         public PlayerFriendshipsController()
         {
-            _playerFriendshipsService = new PlayerFriendshipsServiceDb();
+            _playerFriendshipsService = new PlayerFriendshipsServiceImpl();
             _mapperToPlayerModel = new MapperConfiguration(cfg => cfg.CreateMap<Player, PlayerViewModel>()).CreateMapper();
             _mapperToFriendship = new MapperConfiguration(cfg => cfg.CreateMap<PlayersFriendshipViewModel, PlayersFriendship>()).CreateMapper();
         }

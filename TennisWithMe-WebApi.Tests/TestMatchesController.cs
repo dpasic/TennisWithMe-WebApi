@@ -20,7 +20,7 @@ namespace TennisWithMe_WebApi.Tests
         private static string MOCK_ID = "testID";
 
         [TestMethod]
-        public async Task GetReturnsMatchesWithSameId()
+        public async Task GetReturnsActiveMatchesWithSameId()
         {
             // Arrange
             var mockService = new Mock<IMatchesService>();

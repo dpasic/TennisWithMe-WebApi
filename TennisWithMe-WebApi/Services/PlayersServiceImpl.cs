@@ -9,8 +9,28 @@ using TennisWithMe_WebApi.Services.Interfaces;
 
 namespace TennisWithMe_WebApi.Services
 {
-    public class PlayersServiceDb : IPlayersService
+    public class PlayersServiceImpl : IPlayersService
     {
+        private IEnumerable<Player> _players;
+
+        public PlayersServiceImpl()
+        {
+            _players = null;
+        }
+        public PlayersServiceImpl(IEnumerable<Player> players)
+        {
+            _players = players;
+        }
+
+        private IEnumerable<Player> GetPlayers(ApplicationDbContext db)
+        {
+            if (_players == null)
+            {
+                return db.Users;
+            }
+            return _players;
+        }
+
         [LoggerAspect]
         public async Task<List<Player>> GetPlayersByQueries(string appUserID, string city, string gender, string skill)
         {
@@ -18,7 +38,7 @@ namespace TennisWithMe_WebApi.Services
             {
                 return await Task.Run(() =>
                 {
-                    var players = db.Users.Where(x => x.Id != appUserID && x.City.ToLower().Contains(city)
+                    var players = GetPlayers(db).Where(x => x.Id != appUserID && x.City.ToLower().Contains(city)
                                     && x.Gender.ToLower().Contains(gender) && x.Skill.ToLower().Contains(skill)).ToList();
                     return players;
                 });

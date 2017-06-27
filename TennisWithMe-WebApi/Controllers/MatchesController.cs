@@ -25,7 +25,7 @@ namespace TennisWithMe_WebApi.Controllers
 
         public MatchesController()
         {
-            _matchesService = new MatchesServiceDb();
+            _matchesService = new MatchesServiceImpl();
             _mapperToMatchModel = new MapperConfiguration(cfg => cfg.CreateMap<Match, MatchViewModel>()).CreateMapper();
             _mapperToMatch = new MapperConfiguration(cfg => cfg.CreateMap<MatchViewModel, Match>()).CreateMapper();
         }

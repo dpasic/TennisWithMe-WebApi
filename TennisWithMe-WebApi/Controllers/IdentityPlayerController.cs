@@ -24,7 +24,7 @@ namespace TennisWithMe_WebApi.Controllers
 
         public IdentityPlayerController()
         {
-            _identityPlayerService = new IdentityPlayerServiceDb();
+            _identityPlayerService = new IdentityPlayerServiceImpl();
             _mapper = new MapperConfiguration(cfg => cfg.CreateMap<Player, PlayerViewModel>()).CreateMapper();
         }
 

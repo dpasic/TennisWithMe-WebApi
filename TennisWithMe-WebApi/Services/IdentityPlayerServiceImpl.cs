@@ -10,14 +10,34 @@ using TennisWithMe_WebApi.Services.Interfaces;
 
 namespace TennisWithMe_WebApi.Services
 {
-    public class IdentityPlayerServiceDb : IIdentityPlayerService
+    public class IdentityPlayerServiceImpl : IIdentityPlayerService
     {
+        private IEnumerable<Player> _players;
+
+        public IdentityPlayerServiceImpl()
+        {
+            _players = null;
+        }
+        public IdentityPlayerServiceImpl(IEnumerable<Player> players)
+        {
+            _players = players;
+        }
+
+        private IEnumerable<Player> GetPlayers(ApplicationDbContext db)
+        {
+            if (_players == null)
+            {
+                return db.Users;
+            }
+            return _players;
+        }
+
         [LoggerAspect]
         public async Task<Player> GetIdentityPlayerForId(string appUserId)
         {
             using (var db = new ApplicationDbContext())
             {
-                return await Task.Run(() => db.Users.Find(appUserId));
+                return await Task.Run(() => GetPlayers(db).SingleOrDefault(x => x.Id == appUserId));
             }
         }
 
@@ -28,7 +48,7 @@ namespace TennisWithMe_WebApi.Services
             {
                 await Task.Run(() =>
                 {
-                    var targetPlayer = db.Users.Find(appUserId);
+                    var targetPlayer = GetPlayers(db).SingleOrDefault(x => x.Id == appUserId);
 
                     targetPlayer.FirstName = model.FirstName;
                     targetPlayer.LastName = model.LastName;
