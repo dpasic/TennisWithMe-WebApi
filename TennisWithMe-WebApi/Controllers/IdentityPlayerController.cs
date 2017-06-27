@@ -12,6 +12,7 @@ using TennisWithMe_WebApi.Services;
 using AutoMapper;
 using TennisWithMe_WebApi.Aspects;
 using TennisWithMe_WebApi.Services.Interfaces;
+using Metrics;
 
 namespace TennisWithMe_WebApi.Controllers
 {
@@ -21,17 +22,20 @@ namespace TennisWithMe_WebApi.Controllers
     {
         private IIdentityPlayerService _identityPlayerService;
         private IMapper _mapper;
+        private readonly Counter _counter;
 
         public IdentityPlayerController()
         {
             _identityPlayerService = new IdentityPlayerServiceImpl();
             _mapper = new MapperConfiguration(cfg => cfg.CreateMap<Player, PlayerViewModel>()).CreateMapper();
+            _counter = Metric.Counter("IdentityPlayerController.GetIdentityPlayer", Unit.Calls);
         }
 
         public IdentityPlayerController(IIdentityPlayerService identityPlayerService)
         {
             _identityPlayerService = identityPlayerService;
             _mapper = new MapperConfiguration(cfg => cfg.CreateMap<Player, PlayerViewModel>()).CreateMapper();
+            _counter = Metric.Counter("IdentityPlayerController.GetIdentityPlayer", Unit.Calls);
         }
 
         [HttpGet]
@@ -39,6 +43,8 @@ namespace TennisWithMe_WebApi.Controllers
         [TimerAspect]
         public async Task<IHttpActionResult> GetIdentityPlayer(string userID = null)
         {
+            _counter.Increment();
+
             string appUserID = (userID == null) ? User.Identity.GetUserId() : userID;
 
             try

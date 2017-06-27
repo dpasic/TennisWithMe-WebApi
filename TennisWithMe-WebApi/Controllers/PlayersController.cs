@@ -44,7 +44,7 @@ namespace TennisWithMe_WebApi.Controllers
         [HttpGet]
         [Route("")]
         [TimerAspect]
-        public async Task<IHttpActionResult> GetPlayersByQueries(string city, string gender, string skill, string userID = null)
+        public async Task<IHttpActionResult> GetPlayersByQueries(string city = null, string gender = null, string skill = null, string userID = null)
         {
             using (var context = _timer.NewContext())
             {
