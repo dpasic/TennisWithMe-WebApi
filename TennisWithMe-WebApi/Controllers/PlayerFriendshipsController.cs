@@ -11,6 +11,7 @@ using TennisWithMe_WebApi.ViewModels;
 using TennisWithMe_WebApi.Services;
 using AutoMapper;
 using TennisWithMe_WebApi.Aspects;
+using TennisWithMe_WebApi.Services.Interfaces;
 
 namespace TennisWithMe_WebApi.Controllers
 {
@@ -18,13 +19,20 @@ namespace TennisWithMe_WebApi.Controllers
     [RoutePrefix("api/PlayerFriendships")]
     public class PlayerFriendshipsController : ApiController
     {
-        private PlayerFriendshipsService _playerFriendshipsService;
+        private IPlayerFriendshipsService _playerFriendshipsService;
         private IMapper _mapperToPlayerModel;
         private IMapper _mapperToFriendship;
 
         public PlayerFriendshipsController()
         {
-            _playerFriendshipsService = PlayerFriendshipsService.Instance;
+            _playerFriendshipsService = new PlayerFriendshipsServiceImpl();
+            _mapperToPlayerModel = new MapperConfiguration(cfg => cfg.CreateMap<Player, PlayerViewModel>()).CreateMapper();
+            _mapperToFriendship = new MapperConfiguration(cfg => cfg.CreateMap<PlayersFriendshipViewModel, PlayersFriendship>()).CreateMapper();
+        }
+
+        public PlayerFriendshipsController(IPlayerFriendshipsService playerFriendshipsService)
+        {
+            _playerFriendshipsService = playerFriendshipsService;
             _mapperToPlayerModel = new MapperConfiguration(cfg => cfg.CreateMap<Player, PlayerViewModel>()).CreateMapper();
             _mapperToFriendship = new MapperConfiguration(cfg => cfg.CreateMap<PlayersFriendshipViewModel, PlayersFriendship>()).CreateMapper();
         }
@@ -32,9 +40,9 @@ namespace TennisWithMe_WebApi.Controllers
         [HttpGet]
         [Route("Active")]
         [TimerAspect]
-        public async Task<IHttpActionResult> GetActiveFriends()
+        public async Task<IHttpActionResult> GetActiveFriends(string userID = null)
         {
-            string appUserID = User.Identity.GetUserId();
+            string appUserID = (userID == null) ? User.Identity.GetUserId() : userID;
 
             try
             {
@@ -52,9 +60,9 @@ namespace TennisWithMe_WebApi.Controllers
         [HttpGet]
         [Route("Requested")]
         [TimerAspect]
-        public async Task<IHttpActionResult> GetRequestedFriends()
+        public async Task<IHttpActionResult> GetRequestedFriends(string userID = null)
         {
-            string appUserID = User.Identity.GetUserId();
+            string appUserID = (userID == null) ? User.Identity.GetUserId() : userID;
 
             try
             {
@@ -76,9 +84,9 @@ namespace TennisWithMe_WebApi.Controllers
         [HttpGet]
         [Route("Strangers")]
         [TimerAspect]
-        public async Task<IHttpActionResult> GetStrangersForQuery(string query)
+        public async Task<IHttpActionResult> GetStrangersForQuery(string query, string userID = null)
         {
-            string appUserID = User.Identity.GetUserId();
+            string appUserID = (userID == null) ? User.Identity.GetUserId() : userID;
 
             try
             {
@@ -96,9 +104,9 @@ namespace TennisWithMe_WebApi.Controllers
         [HttpPost]
         [Route("RequestFriendship")]
         [TimerAspect]
-        public async Task<IHttpActionResult> RequestFriendship(PlayersFriendshipViewModel model)
+        public async Task<IHttpActionResult> RequestFriendship(PlayersFriendshipViewModel model, string userID = null)
         {
-            string appUserID = User.Identity.GetUserId();
+            string appUserID = (userID == null) ? User.Identity.GetUserId() : userID;
             model.PlayerOneId = (model.PlayerOneId == null) ? appUserID : model.PlayerOneId;
 
             try
@@ -117,9 +125,9 @@ namespace TennisWithMe_WebApi.Controllers
         [HttpPut]
         [Route("ConfirmFriendship")]
         [TimerAspect]
-        public async Task<IHttpActionResult> ConfirmFriendship(PlayersFriendshipViewModel model)
+        public async Task<IHttpActionResult> ConfirmFriendship(PlayersFriendshipViewModel model, string userID = null)
         {
-            string appUserID = User.Identity.GetUserId();
+            string appUserID = (userID == null) ? User.Identity.GetUserId() : userID;
             model.PlayerOneId = (model.PlayerOneId == null) ? appUserID : model.PlayerOneId;
 
             try

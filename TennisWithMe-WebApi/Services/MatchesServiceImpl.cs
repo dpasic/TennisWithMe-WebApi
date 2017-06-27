@@ -6,23 +6,30 @@ using System.Threading.Tasks;
 using System.Web;
 using TennisWithMe_WebApi.Models;
 using TennisWithMe_WebApi.ViewModels;
+using TennisWithMe_WebApi.Services.Interfaces;
 
 namespace TennisWithMe_WebApi.Services
 {
-    public class MatchesService
+    public class MatchesServiceImpl : IMatchesService
     {
-        private static MatchesService _matchesService;
+        private IEnumerable<Match> _matches;
 
-        public static MatchesService Instance
+        public MatchesServiceImpl()
         {
-            get
+            _matches = null;
+        }
+        public MatchesServiceImpl(IEnumerable<Match> matches)
+        {
+            _matches = matches;
+        }
+
+        private IEnumerable<Match> GetMatches(ApplicationDbContext db)
+        {
+            if (_matches == null)
             {
-                if (_matchesService == null)
-                {
-                    _matchesService = new MatchesService();
-                }
-                return _matchesService;
+                return db.Matches;
             }
+            return _matches;
         }
 
         [LoggerAspect]
@@ -32,7 +39,7 @@ namespace TennisWithMe_WebApi.Services
             {
                 return await Task.Run(() =>
                 {
-                    var matches = db.Matches.Where(x => (x.PlayerOneId == appUserId || x.PlayerTwoId == appUserId) && x.IsConfirmed == true).ToList();
+                    var matches = GetMatches(db).Where(x => (x.PlayerOneId == appUserId || x.PlayerTwoId == appUserId) && x.IsConfirmed).ToList();
                     return matches;
                 });
             }
@@ -45,7 +52,7 @@ namespace TennisWithMe_WebApi.Services
             {
                 return await Task.Run(() =>
                 {
-                    var matches = db.Matches.Where(x => (x.PlayerOneId == appUserId || x.PlayerTwoId == appUserId) && x.IsConfirmed == false).ToList();
+                    var matches = GetMatches(db).Where(x => (x.PlayerOneId == appUserId || x.PlayerTwoId == appUserId) && x.IsConfirmed == false).ToList();
                     return matches;
                 });
             }
@@ -71,7 +78,7 @@ namespace TennisWithMe_WebApi.Services
             {
                 await Task.Run(() =>
                 {
-                    var targetMatch = db.Matches.Find(match.Id);
+                    var targetMatch = GetMatches(db).SingleOrDefault(x => x.Id == match.Id);
                     targetMatch.IsConfirmed = true;
                     targetMatch.IsPlayed = true;
 
@@ -87,7 +94,7 @@ namespace TennisWithMe_WebApi.Services
             {
                 await Task.Run(() =>
                 {
-                    var targetMatch = db.Matches.Find(model.Id);
+                    var targetMatch = GetMatches(db).SingleOrDefault(x => x.Id == model.Id);
 
                     targetMatch.CityPlayed = model.CityPlayed;
                     targetMatch.Comment = model.CityPlayed;
