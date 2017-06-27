@@ -257,10 +257,15 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Services\MatchesService.cs" />
-    <Compile Include="Services\PlayersService.cs" />
-    <Compile Include="Services\PlayerFriendshipsService.cs" />
-    <Compile Include="Services\IdentityPlayerService.cs" />
+    <Compile Include="Services\Interfaces\IIdentityPlayerService.cs" />
+    <Compile Include="Services\Interfaces\IMatchesService.cs" />
+    <Compile Include="Services\Interfaces\IPlayerFriendshipsService.cs" />
+    <Compile Include="Services\Interfaces\IPlayersService.cs" />
+    <Compile Include="Services\MatchesServiceDb.cs" />
+    <Compile Include="Services\PlayersServiceLocal.cs" />
+    <Compile Include="Services\PlayersServiceDb.cs" />
+    <Compile Include="Services\PlayerFriendshipsServiceDb.cs" />
+    <Compile Include="Services\IdentityPlayerServiceDb.cs" />
     <Compile Include="ViewModels\AccountBindingModels.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />

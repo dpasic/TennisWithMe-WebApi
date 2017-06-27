@@ -11,6 +11,7 @@ using TennisWithMe_WebApi.ViewModels;
 using TennisWithMe_WebApi.Services;
 using AutoMapper;
 using TennisWithMe_WebApi.Aspects;
+using TennisWithMe_WebApi.Services.Interfaces;
 
 namespace TennisWithMe_WebApi.Controllers
 {
@@ -18,25 +19,31 @@ namespace TennisWithMe_WebApi.Controllers
     [RoutePrefix("api/IdentityPlayer")]
     public class IdentityPlayerController : ApiController
     {
-        private IdentityPlayerService _identityPlayerService;
+        private IIdentityPlayerService _identityPlayerService;
         private IMapper _mapper;
 
         public IdentityPlayerController()
         {
-            _identityPlayerService = IdentityPlayerService.Instance;
+            _identityPlayerService = new IdentityPlayerServiceDb();
+            _mapper = new MapperConfiguration(cfg => cfg.CreateMap<Player, PlayerViewModel>()).CreateMapper();
+        }
+
+        public IdentityPlayerController(IIdentityPlayerService identityPlayerService)
+        {
+            _identityPlayerService = identityPlayerService;
             _mapper = new MapperConfiguration(cfg => cfg.CreateMap<Player, PlayerViewModel>()).CreateMapper();
         }
 
         [HttpGet]
         [Route("")]
         [TimerAspect]
-        public async Task<IHttpActionResult> GetIdentityPlayer()
+        public async Task<IHttpActionResult> GetIdentityPlayer(string userID = null)
         {
-            string appUserId = User.Identity.GetUserId();
+            string appUserID = (userID == null) ? User.Identity.GetUserId() : userID;
 
             try
             {
-                var identityPlayer = await _identityPlayerService.GetIdentityPlayerForId(appUserId);
+                var identityPlayer = await _identityPlayerService.GetIdentityPlayerForId(appUserID);
                 var identityPlayerModel = _mapper.Map<PlayerViewModel>(identityPlayer);
 
                 return Ok<PlayerViewModel>(identityPlayerModel);
@@ -50,13 +57,13 @@ namespace TennisWithMe_WebApi.Controllers
         [HttpPut]
         [Route("")]
         [TimerAspect]
-        public async Task<IHttpActionResult> UpdateIdentityPlayer(PlayerViewModel model)
+        public async Task<IHttpActionResult> UpdateIdentityPlayer(PlayerViewModel model, string userID = null)
         {
-            string appUserId = User.Identity.GetUserId();
+            string appUserID = (userID == null) ? User.Identity.GetUserId() : userID;
 
             try
             {
-                await _identityPlayerService.UpdateIdentityPlayerForId(appUserId, model);
+                await _identityPlayerService.UpdateIdentityPlayerForId(appUserID, model);
 
                 return Ok();
             }

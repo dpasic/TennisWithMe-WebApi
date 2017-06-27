@@ -5,25 +5,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using TennisWithMe_WebApi.Models;
+using TennisWithMe_WebApi.Services.Interfaces;
 
 namespace TennisWithMe_WebApi.Services
 {
-    public class PlayersService
+    public class PlayersServiceDb : IPlayersService
     {
-        private static PlayersService _playersService;
-
-        public static PlayersService Instance
-        {
-            get
-            {
-                if (_playersService == null)
-                {
-                    _playersService = new PlayersService();
-                }
-                return _playersService;
-            }
-        }
-
         [LoggerAspect]
         public async Task<List<Player>> GetPlayersByQueries(string appUserID, string city, string gender, string skill)
         {
@@ -31,7 +18,7 @@ namespace TennisWithMe_WebApi.Services
             {
                 return await Task.Run(() =>
                 {
-                    var players = db.Users.Where(x => x.Id != appUserID && x.City.ToLower().Contains(city) 
+                    var players = db.Users.Where(x => x.Id != appUserID && x.City.ToLower().Contains(city)
                                     && x.Gender.ToLower().Contains(gender) && x.Skill.ToLower().Contains(skill)).ToList();
                     return players;
                 });

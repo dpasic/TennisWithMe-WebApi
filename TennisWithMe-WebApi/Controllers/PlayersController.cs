@@ -12,6 +12,7 @@ using TennisWithMe_WebApi.Services;
 using AutoMapper;
 using TennisWithMe_WebApi.Aspects;
 using Metrics;
+using TennisWithMe_WebApi.Services.Interfaces;
 
 namespace TennisWithMe_WebApi.Controllers
 {
@@ -19,14 +20,22 @@ namespace TennisWithMe_WebApi.Controllers
     [RoutePrefix("api/Players")]
     public class PlayersController : ApiController
     {
-        private PlayersService _playersService;
+        private IPlayersService _playersService;
         private IMapper _mapperToPlayerModel;
         private IMapper _mapperToFriendship;
         private readonly Timer _timer;
 
         public PlayersController()
         {
-            _playersService = PlayersService.Instance;
+            _playersService = new PlayersServiceDb();
+            _mapperToPlayerModel = new MapperConfiguration(cfg => cfg.CreateMap<Player, PlayerViewModel>()).CreateMapper();
+            _mapperToFriendship = new MapperConfiguration(cfg => cfg.CreateMap<PlayersFriendshipViewModel, PlayersFriendship>()).CreateMapper();
+            _timer = Metric.Timer("PlayersController.GetPlayersByQueries", Unit.Requests);
+        }
+
+        public PlayersController(IPlayersService playersService)
+        {
+            _playersService = playersService;
             _mapperToPlayerModel = new MapperConfiguration(cfg => cfg.CreateMap<Player, PlayerViewModel>()).CreateMapper();
             _mapperToFriendship = new MapperConfiguration(cfg => cfg.CreateMap<PlayersFriendshipViewModel, PlayersFriendship>()).CreateMapper();
             _timer = Metric.Timer("PlayersController.GetPlayersByQueries", Unit.Requests);
@@ -35,11 +44,11 @@ namespace TennisWithMe_WebApi.Controllers
         [HttpGet]
         [Route("")]
         [TimerAspect]
-        public async Task<IHttpActionResult> GetPlayersByQueries(string city, string gender, string skill)
+        public async Task<IHttpActionResult> GetPlayersByQueries(string city, string gender, string skill, string userID = null)
         {
             using (var context = _timer.NewContext())
             {
-                string appUserID = User.Identity.GetUserId();
+                string appUserID = (userID == null) ? User.Identity.GetUserId() : userID;
 
                 city = string.IsNullOrWhiteSpace(city) ? string.Empty : city.ToLower();
                 gender = string.IsNullOrWhiteSpace(gender) ? string.Empty : gender.ToLower();

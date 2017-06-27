@@ -11,6 +11,7 @@ using TennisWithMe_WebApi.ViewModels;
 using TennisWithMe_WebApi.Services;
 using AutoMapper;
 using TennisWithMe_WebApi.Aspects;
+using TennisWithMe_WebApi.Services.Interfaces;
 
 namespace TennisWithMe_WebApi.Controllers
 {
@@ -18,13 +19,20 @@ namespace TennisWithMe_WebApi.Controllers
     [RoutePrefix("api/Matches")]
     public class MatchesController : ApiController
     {
-        private MatchesService _matchesService;
+        private IMatchesService _matchesService;
         private IMapper _mapperToMatchModel;
         private IMapper _mapperToMatch;
 
         public MatchesController()
         {
-            _matchesService = MatchesService.Instance;
+            _matchesService = new MatchesServiceDb();
+            _mapperToMatchModel = new MapperConfiguration(cfg => cfg.CreateMap<Match, MatchViewModel>()).CreateMapper();
+            _mapperToMatch = new MapperConfiguration(cfg => cfg.CreateMap<MatchViewModel, Match>()).CreateMapper();
+        }
+
+        public MatchesController(IMatchesService matchesService)
+        {
+            _matchesService = matchesService;
             _mapperToMatchModel = new MapperConfiguration(cfg => cfg.CreateMap<Match, MatchViewModel>()).CreateMapper();
             _mapperToMatch = new MapperConfiguration(cfg => cfg.CreateMap<MatchViewModel, Match>()).CreateMapper();
         }
@@ -32,9 +40,9 @@ namespace TennisWithMe_WebApi.Controllers
         [HttpGet]
         [Route("Active")]
         [TimerAspect]
-        public async Task<IHttpActionResult> GetActiveMatches()
+        public async Task<IHttpActionResult> GetActiveMatches(string userID = null)
         {
-            string appUserID = User.Identity.GetUserId();
+            string appUserID = (userID == null) ? User.Identity.GetUserId() : userID;
 
             try
             {
@@ -52,9 +60,9 @@ namespace TennisWithMe_WebApi.Controllers
         [HttpGet]
         [Route("Requested")]
         [TimerAspect]
-        public async Task<IHttpActionResult> GetRequestedMatches()
+        public async Task<IHttpActionResult> GetRequestedMatches(string userID = null)
         {
-            string appUserID = User.Identity.GetUserId();
+            string appUserID = (userID == null) ? User.Identity.GetUserId() : userID;
 
             try
             {
@@ -77,9 +85,9 @@ namespace TennisWithMe_WebApi.Controllers
         [HttpPost]
         [Route("RequestMatch")]
         [TimerAspect]
-        public async Task<IHttpActionResult> RequestMatch(MatchViewModel model)
+        public async Task<IHttpActionResult> RequestMatch(MatchViewModel model, string userID = null)
         {
-            string appUserID = User.Identity.GetUserId();
+            string appUserID = (userID == null) ? User.Identity.GetUserId() : userID;
             model.PlayerOneId = (model.PlayerOneId == null) ? appUserID : model.PlayerOneId;
 
             try
@@ -98,9 +106,9 @@ namespace TennisWithMe_WebApi.Controllers
         [HttpPut]
         [Route("ConfirmMatch")]
         [TimerAspect]
-        public async Task<IHttpActionResult> ConfirmMatch(MatchViewModel model)
+        public async Task<IHttpActionResult> ConfirmMatch(MatchViewModel model, string userID = null)
         {
-            string appUserID = User.Identity.GetUserId();
+            string appUserID = (userID == null) ? User.Identity.GetUserId() : userID;
             model.PlayerOneId = (model.PlayerOneId == null) ? appUserID : model.PlayerOneId;
 
             try

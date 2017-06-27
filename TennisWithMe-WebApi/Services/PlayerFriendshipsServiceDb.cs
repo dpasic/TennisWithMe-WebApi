@@ -5,25 +5,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using TennisWithMe_WebApi.Models;
+using TennisWithMe_WebApi.Services.Interfaces;
 
 namespace TennisWithMe_WebApi.Services
 {
-    public class PlayerFriendshipsService
+    public class PlayerFriendshipsServiceDb : IPlayerFriendshipsService
     {
-        private static PlayerFriendshipsService _playerFriendshipsService;
-
-        public static PlayerFriendshipsService Instance
-        {
-            get
-            {
-                if (_playerFriendshipsService == null)
-                {
-                    _playerFriendshipsService = new PlayerFriendshipsService();
-                }
-                return _playerFriendshipsService;
-            }
-        }
-
         [LoggerAspect]
         public async Task<List<Player>> GetActiveFriendsForId(string appUserId)
         {
@@ -31,7 +18,7 @@ namespace TennisWithMe_WebApi.Services
             {
                 return await Task.Run(() =>
                 {
-                    var friendsCollection = db.PlayersFriendships.Where(x => (x.PlayerOneId == appUserId || x.PlayerTwoId == appUserId) && x.IsActive == true);
+                    var friendsCollection = db.PlayersFriendships.Where(x => (x.PlayerOneId == appUserId || x.PlayerTwoId == appUserId) && x.IsActive);
                     var friendsPart1 = friendsCollection.Where(x => x.PlayerOneId == appUserId).Select(x => x.PlayerTwo).ToList();
                     var friendsPart2 = friendsCollection.Where(x => x.PlayerTwoId == appUserId).Select(x => x.PlayerOne).ToList();
 

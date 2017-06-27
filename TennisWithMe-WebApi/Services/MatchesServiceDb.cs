@@ -6,25 +6,12 @@ using System.Threading.Tasks;
 using System.Web;
 using TennisWithMe_WebApi.Models;
 using TennisWithMe_WebApi.ViewModels;
+using TennisWithMe_WebApi.Services.Interfaces;
 
 namespace TennisWithMe_WebApi.Services
 {
-    public class MatchesService
+    public class MatchesServiceDb : IMatchesService
     {
-        private static MatchesService _matchesService;
-
-        public static MatchesService Instance
-        {
-            get
-            {
-                if (_matchesService == null)
-                {
-                    _matchesService = new MatchesService();
-                }
-                return _matchesService;
-            }
-        }
-
         [LoggerAspect]
         public async Task<List<Match>> GetActiveMatchesForId(string appUserId)
         {
@@ -32,7 +19,7 @@ namespace TennisWithMe_WebApi.Services
             {
                 return await Task.Run(() =>
                 {
-                    var matches = db.Matches.Where(x => (x.PlayerOneId == appUserId || x.PlayerTwoId == appUserId) && x.IsConfirmed == true).ToList();
+                    var matches = db.Matches.Where(x => (x.PlayerOneId == appUserId || x.PlayerTwoId == appUserId) && x.IsConfirmed).ToList();
                     return matches;
                 });
             }

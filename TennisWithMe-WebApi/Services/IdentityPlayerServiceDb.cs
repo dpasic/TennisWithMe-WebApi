@@ -6,25 +6,12 @@ using System.Threading.Tasks;
 using System.Web;
 using TennisWithMe_WebApi.Models;
 using TennisWithMe_WebApi.ViewModels;
+using TennisWithMe_WebApi.Services.Interfaces;
 
 namespace TennisWithMe_WebApi.Services
 {
-    public class IdentityPlayerService
+    public class IdentityPlayerServiceDb : IIdentityPlayerService
     {
-        private static IdentityPlayerService _identityPlayerService;
-
-        public static IdentityPlayerService Instance
-        {
-            get
-            {
-                if (_identityPlayerService == null)
-                {
-                    _identityPlayerService = new IdentityPlayerService();
-                }
-                return _identityPlayerService;
-            }
-        }
-
         [LoggerAspect]
         public async Task<Player> GetIdentityPlayerForId(string appUserId)
         {
