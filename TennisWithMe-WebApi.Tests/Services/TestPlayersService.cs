@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using TennisWithMe_WebApi.Models;
 using TennisWithMe_WebApi.Services;
 
-namespace TennisWithMe_WebApi.Tests
+namespace TennisWithMe_WebApi.Tests.Services
 {
     [TestClass]
     public class TestPlayersService

@@ -65,9 +65,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TestPlayerFriendshipsController.cs" />
-    <Compile Include="TestMatchesController.cs" />
-    <Compile Include="TestPlayersService.cs" />
+    <Compile Include="Controllers\TestPlayersController.cs" />
+    <Compile Include="Controllers\TestMatchesController.cs" />
+    <Compile Include="Services\TestPlayersService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

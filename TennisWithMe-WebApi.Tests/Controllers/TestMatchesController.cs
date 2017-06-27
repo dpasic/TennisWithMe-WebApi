@@ -12,7 +12,7 @@ using TennisWithMe_WebApi.Services;
 using TennisWithMe_WebApi.Services.Interfaces;
 using TennisWithMe_WebApi.ViewModels;
 
-namespace TennisWithMe_WebApi.Tests
+namespace TennisWithMe_WebApi.Tests.Controllers
 {
     [TestClass]
     public class TestMatchesController
