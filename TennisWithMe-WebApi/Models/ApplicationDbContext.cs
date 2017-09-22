@@ -26,6 +26,7 @@ namespace TennisWithMe_WebApi.Models
         {
             base.OnModelCreating(modelBuilder);
 
+            // Match
             modelBuilder.Entity<Match>()
                     .HasRequired(m => m.PlayerOne)
                     .WithMany(t => t.MatchesOne)
@@ -38,7 +39,7 @@ namespace TennisWithMe_WebApi.Models
                     .HasForeignKey(m => m.PlayerTwoId)
                     .WillCascadeOnDelete(false);
 
-
+            // PlayersFriendship
             modelBuilder.Entity<PlayersFriendship>()
                     .HasRequired(m => m.PlayerOne)
                     .WithMany(t => t.PlayersOne)
@@ -49,6 +50,19 @@ namespace TennisWithMe_WebApi.Models
                     .HasRequired(m => m.PlayerTwo)
                     .WithMany(t => t.PlayersTwo)
                     .HasForeignKey(m => m.PlayerTwoId)
+                    .WillCascadeOnDelete(false);
+
+            // PlayersRating
+            modelBuilder.Entity<PlayersRating>()
+                    .HasRequired(m => m.Reviewer)
+                    .WithMany(t => t.Reviewers)
+                    .HasForeignKey(m => m.ReviewerId)
+                    .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<PlayersRating>()
+                    .HasRequired(m => m.Rated)
+                    .WithMany(t => t.Rated)
+                    .HasForeignKey(m => m.RatedId)
                     .WillCascadeOnDelete(false);
         }
     }

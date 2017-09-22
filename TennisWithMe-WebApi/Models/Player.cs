@@ -23,13 +23,26 @@ namespace TennisWithMe_WebApi.Models
         public byte[] Photo { get; set; }
 
         public string Skill { get; set; }
-        public double? Rating { get; set; } //From 1 to 5
+        public double? OverallRating { get; set; } // From 1 to 5
+
+        public int PlayedGames { get; set; }
+        public int WonGames { get; set; }
+        public int LostGames
+        {
+            get
+            {
+                return PlayedGames - WonGames;
+            }
+        }
 
         public virtual ICollection<Match> MatchesOne { get; set; }
         public virtual ICollection<Match> MatchesTwo { get; set; }
 
         public virtual ICollection<PlayersFriendship> PlayersOne { get; set; }
         public virtual ICollection<PlayersFriendship> PlayersTwo { get; set; }
+
+        public virtual ICollection<PlayersRating> Reviewers { get; set; }
+        public virtual ICollection<PlayersRating> Rated { get; set; }
 
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<Player> manager, string authenticationType)

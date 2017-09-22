@@ -19,6 +19,8 @@ namespace TennisWithMe_WebApi.Models
         public string PlayerTwoId { get; set; }
         public string PlayerTwoName { get; set; }
 
+        public string WinnerId { get; set; }
+
         public bool IsConfirmed { get; set; }
         public bool IsPlayed { get; set; }
 
