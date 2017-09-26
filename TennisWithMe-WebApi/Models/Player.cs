@@ -35,11 +35,11 @@ namespace TennisWithMe_WebApi.Models
             }
         }
 
-        public virtual ICollection<Match> MatchesOne { get; set; }
-        public virtual ICollection<Match> MatchesTwo { get; set; }
+        public virtual ICollection<Match> ChallengersMatches { get; set; }
+        public virtual ICollection<Match> OpponentsMatches { get; set; }
 
-        public virtual ICollection<PlayersFriendship> PlayersOne { get; set; }
-        public virtual ICollection<PlayersFriendship> PlayersTwo { get; set; }
+        public virtual ICollection<PlayersFriendship> RequestsSenders { get; set; }
+        public virtual ICollection<PlayersFriendship> RequestsReceivers { get; set; }
 
         public virtual ICollection<PlayersRating> Reviewers { get; set; }
         public virtual ICollection<PlayersRating> Rated { get; set; }

@@ -37,15 +37,15 @@ namespace TennisWithMe_WebApi.Tests.Controllers
             Assert.IsNotNull(contentResult.Content);
             foreach (var item in contentResult.Content)
             {
-                Assert.AreEqual(MOCK_ID, item.PlayerOneId);
+                Assert.AreEqual(MOCK_ID, item.ChallengerId);
             }
         }
 
         private List<Models.Match> GetTestMatches()
         {
             var matches = new List<Models.Match>();
-            matches.Add(new Models.Match { PlayerOneId = MOCK_ID, PlayerTwoId = "secondID" });
-            matches.Add(new Models.Match { PlayerOneId = MOCK_ID, PlayerTwoId = "thirdID" });
+            matches.Add(new Models.Match { ChallengerId = MOCK_ID, OpponentId = "secondID" });
+            matches.Add(new Models.Match { ChallengerId = MOCK_ID, OpponentId = "thirdID" });
 
             return matches;
         }

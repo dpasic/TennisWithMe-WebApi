@@ -28,28 +28,28 @@ namespace TennisWithMe_WebApi.Models
 
             // Match
             modelBuilder.Entity<Match>()
-                    .HasRequired(m => m.PlayerOne)
-                    .WithMany(t => t.MatchesOne)
-                    .HasForeignKey(m => m.PlayerOneId)
+                    .HasRequired(m => m.Challenger)
+                    .WithMany(t => t.ChallengersMatches)
+                    .HasForeignKey(m => m.ChallengerId)
                     .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Match>()
-                    .HasRequired(m => m.PlayerTwo)
-                    .WithMany(t => t.MatchesTwo)
-                    .HasForeignKey(m => m.PlayerTwoId)
+                    .HasRequired(m => m.Opponent)
+                    .WithMany(t => t.OpponentsMatches)
+                    .HasForeignKey(m => m.OpponentId)
                     .WillCascadeOnDelete(false);
 
             // PlayersFriendship
             modelBuilder.Entity<PlayersFriendship>()
-                    .HasRequired(m => m.PlayerOne)
-                    .WithMany(t => t.PlayersOne)
-                    .HasForeignKey(m => m.PlayerOneId)
+                    .HasRequired(m => m.RequestSender)
+                    .WithMany(t => t.RequestsSenders)
+                    .HasForeignKey(m => m.RequestSenderId)
                     .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<PlayersFriendship>()
-                    .HasRequired(m => m.PlayerTwo)
-                    .WithMany(t => t.PlayersTwo)
-                    .HasForeignKey(m => m.PlayerTwoId)
+                    .HasRequired(m => m.RequestReceiver)
+                    .WithMany(t => t.RequestsReceivers)
+                    .HasForeignKey(m => m.RequestReceiverId)
                     .WillCascadeOnDelete(false);
 
             // PlayersRating

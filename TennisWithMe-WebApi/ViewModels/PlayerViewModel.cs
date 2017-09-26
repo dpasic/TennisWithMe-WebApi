@@ -23,7 +23,11 @@ namespace TennisWithMe_WebApi.ViewModels
         public string UserName { get; set; }
 
         public string Skill { get; set; }
-        public double? Rating { get; set; }
+        public double? OverallRating { get; set; } // From 1 to 5
+
+        public int PlayedGames { get; set; }
+        public int WonGames { get; set; }
+        public int LostGames { get; set; }
 
         //Used in client
         public bool IsFriendshipReceived { get; set; }

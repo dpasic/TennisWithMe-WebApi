@@ -11,11 +11,11 @@ namespace TennisWithMe_WebApi.Models
     {
         public int Id { get; set; }
 
-        public virtual Player PlayerOne { get; set; }
-        public string PlayerOneId { get; set; }
+        public virtual Player RequestSender { get; set; }
+        public string RequestSenderId { get; set; }
 
-        public virtual Player PlayerTwo { get; set; }
-        public string PlayerTwoId { get; set; }
+        public virtual Player RequestReceiver { get; set; }
+        public string RequestReceiverId { get; set; }
 
         public bool IsConfirmed { get; set; }
         public bool IsActive { get; set; }

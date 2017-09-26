@@ -11,13 +11,13 @@ namespace TennisWithMe_WebApi.Models
     {
         public int Id { get; set; }
 
-        public virtual Player PlayerOne { get; set; }
-        public string PlayerOneId { get; set; }
-        public string PlayerOneName { get; set; }
+        public virtual Player Challenger { get; set; }
+        public string ChallengerId { get; set; }
+        public string ChallengerName { get; set; }
 
-        public virtual Player PlayerTwo { get; set; }
-        public string PlayerTwoId { get; set; }
-        public string PlayerTwoName { get; set; }
+        public virtual Player Opponent { get; set; }
+        public string OpponentId { get; set; }
+        public string OpponentName { get; set; }
 
         public string WinnerId { get; set; }
 
@@ -28,8 +28,8 @@ namespace TennisWithMe_WebApi.Models
         public string Result { get; set; }
         public string Rating { get; set; }
 
-        public string PlayerOneComment { get; set; }
-        public string PlayerTwoComment { get; set; }
+        public string ChallengerComment { get; set; }
+        public string OpponentComment { get; set; }
 
         public long TimestampPlayed { get; set; }
         public string CityPlayed { get; set; }

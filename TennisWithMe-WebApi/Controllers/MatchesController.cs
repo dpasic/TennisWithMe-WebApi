@@ -69,7 +69,7 @@ namespace TennisWithMe_WebApi.Controllers
                 var requestedMatches = await _matchesService.GetRequestedMatchesForId(appUserID);
                 var matchesModels = _mapperToMatchModel.Map<List<MatchViewModel>>(requestedMatches);
 
-                foreach (var match in matchesModels.Where(x => x.PlayerTwoId == appUserID))
+                foreach (var match in matchesModels.Where(x => x.OpponentId == appUserID))
                 {
                     match.IsMatchReceived = true;
                 }
@@ -88,7 +88,7 @@ namespace TennisWithMe_WebApi.Controllers
         public async Task<IHttpActionResult> RequestMatch(MatchViewModel model, string userID = null)
         {
             string appUserID = (userID == null) ? User.Identity.GetUserId() : userID;
-            model.PlayerOneId = (model.PlayerOneId == null) ? appUserID : model.PlayerOneId;
+            model.ChallengerId = (model.ChallengerId == null) ? appUserID : model.ChallengerId;
 
             try
             {
@@ -109,7 +109,7 @@ namespace TennisWithMe_WebApi.Controllers
         public async Task<IHttpActionResult> ConfirmMatch(MatchViewModel model, string userID = null)
         {
             string appUserID = (userID == null) ? User.Identity.GetUserId() : userID;
-            model.PlayerOneId = (model.PlayerOneId == null) ? appUserID : model.PlayerOneId;
+            model.ChallengerId = (model.ChallengerId == null) ? appUserID : model.ChallengerId;
 
             try
             {
