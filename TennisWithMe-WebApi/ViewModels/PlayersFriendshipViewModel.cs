@@ -9,8 +9,8 @@ namespace TennisWithMe_WebApi.ViewModels
     {
         public int Id { get; set; }
 
-        public string RequestSender { get; set; }
-        public string RequestReceiver { get; set; }
+        public string RequestSenderId { get; set; }
+        public string RequestReceiverId { get; set; }
 
         public bool IsConfirmed { get; set; }
         public bool IsActive { get; set; }

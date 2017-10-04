@@ -30,10 +30,10 @@ namespace TennisWithMe_WebApi.Aspects
         {
             _stopwatch.Stop();
 
-            using (var writter = new StreamWriter(FILE_PATH, true))
-            {
-                writter.WriteLine("Method = {0}: Duration = {1}", args.Method.Name, _stopwatch.Elapsed);
-            }
+            //using (var writter = new StreamWriter(FILE_PATH, true))
+            //{
+            //    writter.WriteLine("Method = {0}: Duration = {1}", args.Method.Name, _stopwatch.Elapsed);
+            //}
         }
 
     }

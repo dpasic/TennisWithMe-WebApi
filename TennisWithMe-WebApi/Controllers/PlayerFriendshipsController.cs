@@ -107,7 +107,7 @@ namespace TennisWithMe_WebApi.Controllers
         public async Task<IHttpActionResult> RequestFriendship(PlayersFriendshipViewModel model, string userID = null)
         {
             string appUserID = (userID == null) ? User.Identity.GetUserId() : userID;
-            model.RequestSender = (model.RequestSender == null) ? appUserID : model.RequestSender;
+            model.RequestSenderId = (model.RequestSenderId == null) ? appUserID : model.RequestSenderId;
 
             try
             {
@@ -128,7 +128,7 @@ namespace TennisWithMe_WebApi.Controllers
         public async Task<IHttpActionResult> ConfirmFriendship(PlayersFriendshipViewModel model, string userID = null)
         {
             string appUserID = (userID == null) ? User.Identity.GetUserId() : userID;
-            model.RequestSender = (model.RequestSender == null) ? appUserID : model.RequestSender;
+            model.RequestSenderId = (model.RequestSenderId == null) ? appUserID : model.RequestSenderId;
 
             try
             {

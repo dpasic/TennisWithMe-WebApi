@@ -51,8 +51,8 @@ namespace TennisWithMe_WebApi.Services
                 return await Task.Run(() =>
                 {
                     var friendsCollection = GetPlayersFriendships(db).Where(x => (x.RequestSenderId == appUserId || x.RequestReceiverId == appUserId) && x.IsActive);
-                    var friendsPart1 = friendsCollection.Where(x => x.RequestSenderId == appUserId).Select(x => x.RequestReceiver).ToList();
-                    var friendsPart2 = friendsCollection.Where(x => x.RequestReceiverId == appUserId).Select(x => x.RequestSender).ToList();
+                    var friendsPart1 = friendsCollection.Where(x => x.RequestSenderId == appUserId).ToList().Select(x => x.RequestReceiver).ToList();
+                    var friendsPart2 = friendsCollection.Where(x => x.RequestReceiverId == appUserId).ToList().Select(x => x.RequestSender).ToList();
 
                     friendsPart1.AddRange(friendsPart2);
                     return friendsPart1;
@@ -67,9 +67,9 @@ namespace TennisWithMe_WebApi.Services
             {
                 return await Task.Run(() =>
                 {
-                    var friendsCollection = GetPlayersFriendships(db).Where(x => (x.RequestSenderId == appUserId || x.RequestReceiverId == appUserId) && x.IsConfirmed == false);
-                    var friendsPartRequested = friendsCollection.Where(x => x.RequestSenderId == appUserId).Select(x => x.RequestReceiver).ToList();
-                    var friendsPartReceived = friendsCollection.Where(x => x.RequestReceiverId == appUserId).Select(x => x.RequestSender).ToList();
+                    var friendsCollection = GetPlayersFriendships(db).Where(x => (x.RequestSenderId == appUserId || x.RequestReceiverId == appUserId) && !x.IsConfirmed);
+                    var friendsPartRequested = friendsCollection.Where(x => x.RequestSenderId == appUserId).ToList().Select(x => x.RequestReceiver).ToList();
+                    var friendsPartReceived = friendsCollection.Where(x => x.RequestReceiverId == appUserId).ToList().Select(x => x.RequestSender).ToList();
 
                     return new List<Player>[] { friendsPartRequested, friendsPartReceived };
                 });

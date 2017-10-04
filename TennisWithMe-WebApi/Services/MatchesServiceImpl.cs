@@ -52,7 +52,7 @@ namespace TennisWithMe_WebApi.Services
             {
                 return await Task.Run(() =>
                 {
-                    var matches = GetMatches(db).Where(x => (x.ChallengerId == appUserId || x.OpponentId == appUserId) && x.IsConfirmed == false).ToList();
+                    var matches = GetMatches(db).Where(x => (x.ChallengerId == appUserId || x.OpponentId == appUserId) && !x.IsConfirmed).ToList();
                     return matches;
                 });
             }
