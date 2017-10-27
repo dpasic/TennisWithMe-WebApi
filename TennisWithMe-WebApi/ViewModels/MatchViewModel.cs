@@ -23,6 +23,24 @@ namespace TennisWithMe_WebApi.ViewModels
         public string Rating { get; set; }
 
         public string WinnerId { get; set; }
+        public string WinnerName
+        {
+            get
+            {
+                if (WinnerId == ChallengerId)
+                {
+                    return ChallengerName;
+                }
+                else if (WinnerId == OpponentId)
+                {
+                    return OpponentName;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
 
         public string ChallengerComment { get; set; }
         public string OpponentComment { get; set; }
