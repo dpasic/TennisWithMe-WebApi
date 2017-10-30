@@ -12,6 +12,15 @@ namespace TennisWithMe_WebApi.ViewModels
 
         public string FirstName { get; set; }
         public string LastName { get; set; }
+
+        public string FullName
+        {
+            get
+            {
+                return string.Format("{0} {1}", FirstName, LastName);
+            }
+        }
+
         public int? Age { get; set; }
         public string City { get; set; }
         public string Gender { get; set; }

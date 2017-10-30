@@ -40,15 +40,23 @@ namespace TennisWithMe_WebApi.Controllers
         [HttpGet]
         [Route("Active")]
         [TimerAspect]
-        public async Task<IHttpActionResult> GetActiveMatches(string userID = null)
+        public async Task<IHttpActionResult> GetActiveMatches(string opponentId = null, string userID = null)
         {
             string appUserID = (userID == null) ? User.Identity.GetUserId() : userID;
 
             try
             {
-                var activeMatches = await _matchesService.GetActiveMatchesForId(appUserID);
-                var matchesModels = _mapperToMatchModel.Map<List<MatchViewModel>>(activeMatches);
+                List<Match> activeMatches = null;
+                if (string.IsNullOrWhiteSpace(opponentId))
+                {
+                    activeMatches = await _matchesService.GetActiveMatchesForId(appUserID);
+                }
+                else
+                {
+                    activeMatches = await _matchesService.GetActiveMatchesForIdAndOpponentId(appUserID, opponentId);
+                }
 
+                var matchesModels = _mapperToMatchModel.Map<List<MatchViewModel>>(activeMatches);
                 return Ok<List<MatchViewModel>>(matchesModels);
             }
             catch (Exception ex)

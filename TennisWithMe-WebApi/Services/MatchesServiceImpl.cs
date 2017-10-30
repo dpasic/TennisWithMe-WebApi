@@ -46,6 +46,19 @@ namespace TennisWithMe_WebApi.Services
         }
 
         [LoggerAspect]
+        public async Task<List<Match>> GetActiveMatchesForIdAndOpponentId(string appUserId, string opponentId)
+        {
+            using (var db = new ApplicationDbContext())
+            {
+                return await Task.Run(() =>
+                {
+                    var matches = GetMatches(db).Where(x => (x.ChallengerId == appUserId && x.OpponentId == opponentId || x.OpponentId == appUserId && x.ChallengerId == opponentId) && x.IsConfirmed).ToList();
+                    return matches;
+                });
+            }
+        }
+
+        [LoggerAspect]
         public async Task<List<Match>> GetRequestedMatchesForId(string appUserId)
         {
             using (var db = new ApplicationDbContext())

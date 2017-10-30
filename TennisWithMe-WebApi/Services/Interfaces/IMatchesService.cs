@@ -11,6 +11,7 @@ namespace TennisWithMe_WebApi.Services.Interfaces
     public interface IMatchesService
     {
         Task<List<Match>> GetActiveMatchesForId(string appUserId);
+        Task<List<Match>> GetActiveMatchesForIdAndOpponentId(string appUserId, string opponentId);
         Task<List<Match>> GetRequestedMatchesForId(string appUserId);
         Task RequestMatch(Match match);
         Task ConfirmMatch(Match match);
