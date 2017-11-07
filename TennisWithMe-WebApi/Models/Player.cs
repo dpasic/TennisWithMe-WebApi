@@ -22,18 +22,14 @@ namespace TennisWithMe_WebApi.Models
         public string Summary { get; set; }
         public byte[] Photo { get; set; }
 
-        public string Skill { get; set; }
+        public Skill? SkillEnum { get; set; }
+
         public double? OverallRating { get; set; } // From 1 to 5
 
         public int PlayedGames { get; set; }
         public int WonGames { get; set; }
-        public int LostGames
-        {
-            get
-            {
-                return PlayedGames - WonGames;
-            }
-        }
+
+        public int Points { get; set; }
 
         public virtual ICollection<Match> ChallengersMatches { get; set; }
         public virtual ICollection<Match> OpponentsMatches { get; set; }

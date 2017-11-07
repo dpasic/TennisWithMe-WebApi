@@ -129,8 +129,8 @@ namespace TennisWithMe_WebApi.Services
                         var challenger = db.Users.SingleOrDefault(x => x.Id == model.ChallengerId);
                         var opponent = db.Users.SingleOrDefault(x => x.Id == model.OpponentId);
 
-                        UpdateResultsForPlayer(challenger, confirmedMatchesChallenger);
-                        UpdateResultsForPlayer(opponent, confirmedMatchesOpponent);
+                        UpdateResultsForPlayer(challenger, opponent, confirmedMatchesChallenger);
+                        UpdateResultsForPlayer(opponent, challenger, confirmedMatchesOpponent);
 
                         db.SaveChanges();
 
@@ -145,9 +145,9 @@ namespace TennisWithMe_WebApi.Services
             }
         }
 
-        private void UpdateResultsForPlayer(Player player, List<Match> confirmedMatches)
+        private void UpdateResultsForPlayer(Player player, Player otherPlayer, List<Match> confirmedMatches)
         {
-            int wons = 0, loses = 0;
+            int wons = 0, loses = 0, points = 0;
             foreach (var match in confirmedMatches)
             {
                 if (match.WinnerId == player.Id)
@@ -157,6 +157,12 @@ namespace TennisWithMe_WebApi.Services
                 else if (match.WinnerId != null)
                 {
                     loses++;
+                }
+
+                switch (otherPlayer.Skill)
+                {
+                    default:
+                        break;
                 }
             }
 
