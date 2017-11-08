@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc.Html;
+using TennisWithMe_WebApi.Helpers;
 using TennisWithMe_WebApi.Models;
 
 namespace TennisWithMe_WebApi.ViewModels
@@ -23,7 +26,6 @@ namespace TennisWithMe_WebApi.ViewModels
 
         public int? Age { get; set; }
         public string City { get; set; }
-        public string Gender { get; set; }
         public string MobileNumber { get; set; }
         public string Club { get; set; }
         public string Summary { get; set; }
@@ -31,25 +33,31 @@ namespace TennisWithMe_WebApi.ViewModels
         public string Email { get; set; }
         public string UserName { get; set; }
 
-        public Skill? SkillEnum { get; set; }
-        // use EnumHelper from Booking project
-        public String SkillEnumDescription
+        public Skill? Skill { get; set; }
+        [NotMapped]
+        public String SkillDescription
         {
             get
             {
-                switch (SkillEnum)
-                {
-                    case Skill.Rookie:
-                        return "Rookie";
-                    case Skill.Amateur:
-                        return "Amateur";
-                    case Skill.FormerPlayer:
-                        return "Former Player";
-                    case Skill.Professional:
-                        return "Professional";
-                    default:
-                        return null;
-                }
+                return EnumHelper<Skill>.GetDescriptionFromOptionalEnum(Skill);
+            }
+            set
+            {
+                Skill = EnumHelper<Skill>.GetEnumFromDescription(value);
+            }
+        }
+
+        public Gender? Gender { get; set; }
+        [NotMapped]
+        public String GenderDescription
+        {
+            get
+            {
+                return EnumHelper<Gender>.GetDescriptionFromOptionalEnum(Gender);
+            }
+            set
+            {
+                Gender = EnumHelper<Gender>.GetEnumFromDescription(value);
             }
         }
 

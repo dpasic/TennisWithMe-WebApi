@@ -9,6 +9,6 @@ namespace TennisWithMe_WebApi.Services.Interfaces
 {
     public interface IPlayersService
     {
-        Task<List<Player>> GetPlayersByQueries(string appUserID, string city, string gender, string skill);
+        Task<List<Player>> GetPlayersByQueries(string appUserID, string city, Gender? gender, Skill? skill);
     }
 }

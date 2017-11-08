@@ -16,13 +16,13 @@ namespace TennisWithMe_WebApi.Models
         public string LastName { get; set; }
         public int? Age { get; set; }
         public string City { get; set; }
-        public string Gender { get; set; }
         public string MobileNumber { get; set; }
         public string Club { get; set; }
         public string Summary { get; set; }
         public byte[] Photo { get; set; }
 
-        public Skill? SkillEnum { get; set; }
+        public Gender? Gender { get; set; }
+        public Skill? Skill { get; set; }
 
         public double? OverallRating { get; set; } // From 1 to 5
 

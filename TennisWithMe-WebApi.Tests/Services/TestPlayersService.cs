@@ -18,7 +18,7 @@ namespace TennisWithMe_WebApi.Tests.Services
             var testPlayers = GetTestPlayers();
             var service = new PlayersServiceImpl(testPlayers);
 
-            var result = await service.GetPlayersByQueries(string.Empty, string.Empty, string.Empty, string.Empty);
+            var result = await service.GetPlayersByQueries(string.Empty, string.Empty, null, null);
             Assert.AreEqual(testPlayers.Count(), result.Count);
         }
 
@@ -28,7 +28,7 @@ namespace TennisWithMe_WebApi.Tests.Services
             var testPlayers = GetTestPlayers();
             var service = new PlayersServiceImpl(testPlayers);
 
-            var result = await service.GetPlayersByQueries(string.Empty, "zagreb", string.Empty, string.Empty);
+            var result = await service.GetPlayersByQueries(string.Empty, "zagreb", null, null);
             Assert.AreEqual(2, result.Count);
         }
 
@@ -38,17 +38,17 @@ namespace TennisWithMe_WebApi.Tests.Services
             var testPlayers = GetTestPlayers();
             var service = new PlayersServiceImpl(testPlayers);
 
-            var result = await service.GetPlayersByQueries(string.Empty, "rijeka", "male", "former player");
+            var result = await service.GetPlayersByQueries(string.Empty, "rijeka", Gender.Male, Skill.FormerPlayer);
             Assert.AreEqual(1, result.Count);
         }
 
         private IEnumerable<Player> GetTestPlayers()
         {
             var players = new List<Player>();
-            players.Add(new Player { City = "Pula", Gender = "Male", Skill = "Rookie" });
-            players.Add(new Player { City = "Zagreb", Gender = "Male", Skill = "Former Player" });
-            players.Add(new Player { City = "Zagreb", Gender = "Female", Skill = "Rookie" });
-            players.Add(new Player { City = "Rijeka", Gender = "Male", Skill = "Former Player" });
+            players.Add(new Player { City = "Pula", Gender = Gender.Male, Skill = Skill.Rookie });
+            players.Add(new Player { City = "Zagreb", Gender = Gender.Male, Skill = Skill.FormerPlayer });
+            players.Add(new Player { City = "Zagreb", Gender = Gender.Female, Skill = Skill.Rookie });
+            players.Add(new Player { City = "Rijeka", Gender = Gender.Male, Skill = Skill.FormerPlayer });
 
             return players;
         }

@@ -13,6 +13,7 @@ using AutoMapper;
 using TennisWithMe_WebApi.Aspects;
 using Metrics;
 using TennisWithMe_WebApi.Services.Interfaces;
+using TennisWithMe_WebApi.Helpers;
 
 namespace TennisWithMe_WebApi.Controllers
 {
@@ -50,13 +51,23 @@ namespace TennisWithMe_WebApi.Controllers
             {
                 string appUserID = (userID == null) ? User.Identity.GetUserId() : userID;
 
-                city = string.IsNullOrWhiteSpace(city) ? string.Empty : city.ToLower();
-                gender = string.IsNullOrWhiteSpace(gender) ? string.Empty : gender.ToLower();
-                skill = string.IsNullOrWhiteSpace(skill) ? string.Empty : skill.ToLower();
+                // Prepare queries
+                city = string.IsNullOrWhiteSpace(city) ? null : city.ToLower();
+                
+                Gender? genderEnum = null;
+                Skill? skillEnum = null;
+                if (!string.IsNullOrWhiteSpace(gender))
+                {
+                    genderEnum = EnumHelper<Gender>.GetEnumFromDescription(gender);
+                }
+                if (!string.IsNullOrWhiteSpace(skill))
+                {
+                    skillEnum = EnumHelper<Skill>.GetEnumFromDescription(skill);
+                }
 
                 try
                 {
-                    var activeFriends = await _playersService.GetPlayersByQueries(appUserID, city, gender, skill);
+                    var activeFriends = await _playersService.GetPlayersByQueries(appUserID, city, genderEnum, skillEnum);
                     var playerModels = _mapperToPlayerModel.Map<List<PlayerViewModel>>(activeFriends);
 
                     return Ok<List<PlayerViewModel>>(playerModels);

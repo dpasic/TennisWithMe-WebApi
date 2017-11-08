@@ -150,17 +150,33 @@ namespace TennisWithMe_WebApi.Services
             int wons = 0, loses = 0, points = 0;
             foreach (var match in confirmedMatches)
             {
+                var isWinner = false;
+
                 if (match.WinnerId == player.Id)
                 {
                     wons++;
+                    isWinner = true;
                 }
                 else if (match.WinnerId != null)
                 {
                     loses++;
                 }
 
+                var winMultiplication = isWinner ? 3 : 1;
                 switch (otherPlayer.Skill)
                 {
+                    case Skill.Rookie:
+                        points += 10 * winMultiplication;
+                        break;
+                    case Skill.Amateur:
+                        points += 30 * winMultiplication;
+                        break;
+                    case Skill.FormerPlayer:
+                        points += 60 * winMultiplication;
+                        break;
+                    case Skill.Professional:
+                        points += 100 * winMultiplication;
+                        break;
                     default:
                         break;
                 }
@@ -168,6 +184,7 @@ namespace TennisWithMe_WebApi.Services
 
             player.PlayedGames = wons + loses;
             player.WonGames = wons;
+            player.Points = points;
         }
     }
 }

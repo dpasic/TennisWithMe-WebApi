@@ -7,6 +7,7 @@ using System.Web;
 using TennisWithMe_WebApi.Models;
 using TennisWithMe_WebApi.ViewModels;
 using TennisWithMe_WebApi.Services.Interfaces;
+using TennisWithMe_WebApi.Helpers;
 
 namespace TennisWithMe_WebApi.Services
 {
@@ -53,8 +54,8 @@ namespace TennisWithMe_WebApi.Services
                     targetPlayer.FirstName = model.FirstName;
                     targetPlayer.LastName = model.LastName;
                     targetPlayer.City = model.City;
-                    targetPlayer.Gender = model.Gender;
-                    targetPlayer.Skill = model.Skill;
+                    targetPlayer.Gender = EnumHelper<Gender>.GetEnumFromDescription(model.GenderDescription);
+                    targetPlayer.Skill = EnumHelper<Skill>.GetEnumFromDescription(model.SkillDescription);
                     targetPlayer.Summary = model.Summary;
                     targetPlayer.Age = model.Age;
 

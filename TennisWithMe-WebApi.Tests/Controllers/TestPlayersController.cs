@@ -42,11 +42,11 @@ namespace TennisWithMe_WebApi.Tests.Controllers
         private IEnumerable<Player> GetTestPlayers()
         {
             var players = new List<Player>();
-            players.Add(new Player { City = "Pula", Gender = "Male", Skill = "Rookie" });
-            players.Add(new Player { City = "Zagreb", Gender = "Male", Skill = "Former Player" });
-            players.Add(new Player { City = "Zagreb", Gender = "Female", Skill = "Rookie" });
-            players.Add(new Player { City = "Rijeka", Gender = "Male", Skill = "Former Player" });
-            players.Add(new Player { City = "Zagreb", Gender = "Female", Skill = "Former Player" });
+            players.Add(new Player { City = "Pula", Gender = Gender.Male, Skill = Skill.Rookie });
+            players.Add(new Player { City = "Zagreb", Gender = Gender.Male, Skill = Skill.FormerPlayer });
+            players.Add(new Player { City = "Zagreb", Gender = Gender.Female, Skill = Skill.Rookie });
+            players.Add(new Player { City = "Rijeka", Gender = Gender.Male, Skill = Skill.FormerPlayer });
+            players.Add(new Player { City = "Zagreb", Gender = Gender.Female, Skill = Skill.FormerPlayer });
 
             return players;
         }
