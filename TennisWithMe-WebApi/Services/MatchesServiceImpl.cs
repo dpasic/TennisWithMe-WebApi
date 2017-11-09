@@ -112,6 +112,8 @@ namespace TennisWithMe_WebApi.Services
                     {
                         // Update match
                         var targetMatch = GetMatches(db).SingleOrDefault(x => x.Id == model.Id);
+                        var oldWinnerId = targetMatch.WinnerId;
+                        var newWinnerId = model.WinnerId;
 
                         targetMatch.CityPlayed = model.CityPlayed;
                         targetMatch.Comment = model.CityPlayed;
@@ -123,14 +125,11 @@ namespace TennisWithMe_WebApi.Services
                         db.SaveChanges();
 
                         // Update players results
-                        var confirmedMatchesChallenger = GetMatches(db).Where(x => (x.ChallengerId == model.ChallengerId || x.OpponentId == model.ChallengerId) && x.IsConfirmed).ToList();
-                        var confirmedMatchesOpponent = GetMatches(db).Where(x => (x.ChallengerId == model.OpponentId || x.OpponentId == model.OpponentId) && x.IsConfirmed).ToList();
-
                         var challenger = db.Users.SingleOrDefault(x => x.Id == model.ChallengerId);
                         var opponent = db.Users.SingleOrDefault(x => x.Id == model.OpponentId);
 
-                        UpdateResultsForPlayer(challenger, opponent, confirmedMatchesChallenger);
-                        UpdateResultsForPlayer(opponent, challenger, confirmedMatchesOpponent);
+                        UpdateResultsForPlayer(challenger, opponent, oldWinnerId, newWinnerId);
+                        UpdateResultsForPlayer(opponent, challenger, oldWinnerId, newWinnerId);
 
                         db.SaveChanges();
 
@@ -145,47 +144,65 @@ namespace TennisWithMe_WebApi.Services
             }
         }
 
-        // TODO: ispravi ovo da dohvati sve igrace s kojim je ovaj ikad igrao pa se otherPlayer prilagodjava tome
-        private void UpdateResultsForPlayer(Player player, Player otherPlayer, List<Match> confirmedMatches)
+        // TODO: dovrsi logiku (koristi mozda samo 1 poziv metode ako je ok; MatchResult odradi u drugoj metodi mozda)
+        private void UpdateResultsForPlayer(Player player, Player otherPlayer, string oldWinnerId, string newWinnerId)
         {
-            int wons = 0, losses = 0, points = 0;
-            foreach (var match in confirmedMatches)
+            // Prepare match results
+            MatchResult oldResult, newResult;
+
+            if (oldWinnerId == null)
             {
-                var isWinner = false;
-
-                if (match.WinnerId == player.Id)
-                {
-                    wons++;
-                    isWinner = true;
-                }
-                else if (match.WinnerId != null)
-                {
-                    losses++;
-                }
-
-                var winMultiplication = isWinner ? 3 : 1;
-                switch (otherPlayer.Skill)
-                {
-                    case Skill.Rookie:
-                        points += (10 * winMultiplication);
-                        break;
-                    case Skill.Amateur:
-                        points += (30 * winMultiplication);
-                        break;
-                    case Skill.FormerPlayer:
-                        points += (60 * winMultiplication);
-                        break;
-                    case Skill.Professional:
-                        points += (100 * winMultiplication);
-                        break;
-                    default:
-                        break;
-                }
+                oldResult = MatchResult.NotPlayed;
+            }
+            else
+            {
+                oldResult = (oldWinnerId == player.Id) ? MatchResult.Won : MatchResult.Lost;
             }
 
-            player.PlayedGames = wons + losses;
-            player.WonGames = wons;
-            player.Points = points;
+            if (newWinnerId == null)
+            {
+                newResult = MatchResult.NotPlayed;
+            }
+            else
+            {
+                newResult = (newWinnerId == player.Id) ? MatchResult.Won : MatchResult.Lost;
+            }
+
+            // Update results if necessary
+            if (oldResult == newResult)
+            {
+                return;
+            }
+
+            //var winMultiplication = isWinner ? 3 : 1;
+            //switch (otherPlayer.Skill)
+            //{
+            //    case Skill.Rookie:
+            //        points += (10 * winMultiplication);
+            //        break;
+            //    case Skill.Amateur:
+            //        points += (30 * winMultiplication);
+            //        break;
+            //    case Skill.FormerPlayer:
+            //        points += (60 * winMultiplication);
+            //        break;
+            //    case Skill.Professional:
+            //        points += (100 * winMultiplication);
+            //        break;
+            //    default:
+            //        break;
+            //}
+
+            //player.PlayedGames = wons + losses;
+            //player.WonGames = wons;
+            //player.Points = points;
         }
+    }
+
+    enum MatchResult
+    {
+        Won,
+        Lost,
+        NotPlayed
     }
 }
