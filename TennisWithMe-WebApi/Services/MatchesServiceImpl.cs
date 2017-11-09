@@ -145,9 +145,10 @@ namespace TennisWithMe_WebApi.Services
             }
         }
 
+        // TODO: ispravi ovo da dohvati sve igrace s kojim je ovaj ikad igrao pa se otherPlayer prilagodjava tome
         private void UpdateResultsForPlayer(Player player, Player otherPlayer, List<Match> confirmedMatches)
         {
-            int wons = 0, loses = 0, points = 0;
+            int wons = 0, losses = 0, points = 0;
             foreach (var match in confirmedMatches)
             {
                 var isWinner = false;
@@ -159,30 +160,30 @@ namespace TennisWithMe_WebApi.Services
                 }
                 else if (match.WinnerId != null)
                 {
-                    loses++;
+                    losses++;
                 }
 
                 var winMultiplication = isWinner ? 3 : 1;
                 switch (otherPlayer.Skill)
                 {
                     case Skill.Rookie:
-                        points += 10 * winMultiplication;
+                        points += (10 * winMultiplication);
                         break;
                     case Skill.Amateur:
-                        points += 30 * winMultiplication;
+                        points += (30 * winMultiplication);
                         break;
                     case Skill.FormerPlayer:
-                        points += 60 * winMultiplication;
+                        points += (60 * winMultiplication);
                         break;
                     case Skill.Professional:
-                        points += 100 * winMultiplication;
+                        points += (100 * winMultiplication);
                         break;
                     default:
                         break;
                 }
             }
 
-            player.PlayedGames = wons + loses;
+            player.PlayedGames = wons + losses;
             player.WonGames = wons;
             player.Points = points;
         }
