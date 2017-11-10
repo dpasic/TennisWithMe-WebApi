@@ -55,7 +55,7 @@ namespace TennisWithMe_WebApi.Services
                     var friendsPart2 = friendsCollection.Where(x => x.RequestReceiverId == appUserId).ToList().Select(x => x.RequestSender).ToList();
 
                     friendsPart1.AddRange(friendsPart2);
-                    return friendsPart1;
+                    return friendsPart1.OrderBy(x => x.FirstName).ToList();
                 });
             }
         }
@@ -94,7 +94,7 @@ namespace TennisWithMe_WebApi.Services
                     }
 
                     var strangers = users.Where(x => !friendshipsIds.Contains(x.Id)).ToList();
-                    return strangers;
+                    return strangers.OrderBy(x => x.FirstName).ToList();
                 });
             }
         }

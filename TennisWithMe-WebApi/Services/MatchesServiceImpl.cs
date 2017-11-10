@@ -39,7 +39,9 @@ namespace TennisWithMe_WebApi.Services
             {
                 return await Task.Run(() =>
                 {
-                    var matches = GetMatches(db).Where(x => (x.ChallengerId == appUserId || x.OpponentId == appUserId) && x.IsConfirmed).ToList();
+                    var matches = GetMatches(db)
+                        .Where(x => (x.ChallengerId == appUserId || x.OpponentId == appUserId) && x.IsConfirmed)
+                        .OrderByDescending(x => x.TimestampPlayed).ToList();
                     return matches;
                 });
             }
@@ -52,7 +54,9 @@ namespace TennisWithMe_WebApi.Services
             {
                 return await Task.Run(() =>
                 {
-                    var matches = GetMatches(db).Where(x => (x.ChallengerId == appUserId && x.OpponentId == opponentId || x.OpponentId == appUserId && x.ChallengerId == opponentId) && x.IsConfirmed).ToList();
+                    var matches = GetMatches(db)
+                        .Where(x => (x.ChallengerId == appUserId && x.OpponentId == opponentId || x.OpponentId == appUserId && x.ChallengerId == opponentId) && x.IsConfirmed)
+                        .OrderByDescending(x => x.TimestampPlayed).ToList();
                     return matches;
                 });
             }
@@ -65,7 +69,9 @@ namespace TennisWithMe_WebApi.Services
             {
                 return await Task.Run(() =>
                 {
-                    var matches = GetMatches(db).Where(x => (x.ChallengerId == appUserId || x.OpponentId == appUserId) && !x.IsConfirmed).ToList();
+                    var matches = GetMatches(db)
+                        .Where(x => (x.ChallengerId == appUserId || x.OpponentId == appUserId) && !x.IsConfirmed)
+                        .OrderByDescending(x => x.TimestampPlayed).ToList();
                     return matches;
                 });
             }
@@ -144,11 +150,11 @@ namespace TennisWithMe_WebApi.Services
             }
         }
 
-        // TODO: dovrsi logiku (koristi mozda samo 1 poziv metode ako je ok; MatchResult odradi u drugoj metodi mozda)
         private void UpdateResultsForPlayer(Player player, Player otherPlayer, string oldWinnerId, string newWinnerId)
         {
             // Prepare match results
             MatchResult oldResult, newResult;
+            int oldPoints = 0, newPoints = 0;
 
             if (oldWinnerId == null)
             {
@@ -173,29 +179,63 @@ namespace TennisWithMe_WebApi.Services
             {
                 return;
             }
+            else if (oldResult == MatchResult.NotPlayed)
+            {
+                player.PlayedGames += (newResult != MatchResult.NotPlayed) ? 1 : 0;
+                player.WonGames += (newResult == MatchResult.Won) ? 1 : 0;
 
-            //var winMultiplication = isWinner ? 3 : 1;
-            //switch (otherPlayer.Skill)
-            //{
-            //    case Skill.Rookie:
-            //        points += (10 * winMultiplication);
-            //        break;
-            //    case Skill.Amateur:
-            //        points += (30 * winMultiplication);
-            //        break;
-            //    case Skill.FormerPlayer:
-            //        points += (60 * winMultiplication);
-            //        break;
-            //    case Skill.Professional:
-            //        points += (100 * winMultiplication);
-            //        break;
-            //    default:
-            //        break;
-            //}
+                newPoints = GetPoints(otherPlayer, newResult);
+                player.Points += newPoints;
+            }
+            else
+            {
+                player.PlayedGames -= (newResult == MatchResult.NotPlayed) ? 1 : 0;
 
-            //player.PlayedGames = wons + losses;
-            //player.WonGames = wons;
-            //player.Points = points;
+                if (oldResult == MatchResult.Won)
+                {
+                    player.WonGames--;
+                }
+                else if (oldResult == MatchResult.Lost)
+                {
+                    player.WonGames += (newResult == MatchResult.Won) ? 1 : 0;
+                }
+
+                oldPoints = GetPoints(otherPlayer, oldResult);
+                newPoints = GetPoints(otherPlayer, newResult);
+                var pointsDiff = newPoints - oldPoints;
+                player.Points += pointsDiff;
+            }
+        }
+
+        private static int GetPoints(Player otherPlayer, MatchResult result)
+        {
+            if (result == MatchResult.NotPlayed)
+            {
+                return 0;
+            }
+
+            var winMultiplication = (result == MatchResult.Won) ? 3 : 1;
+            var points = 0;
+
+            switch (otherPlayer.Skill)
+            {
+                case Skill.Rookie:
+                    points = (10 * winMultiplication);
+                    break;
+                case Skill.Amateur:
+                    points = (30 * winMultiplication);
+                    break;
+                case Skill.FormerPlayer:
+                    points = (60 * winMultiplication);
+                    break;
+                case Skill.Professional:
+                    points = (100 * winMultiplication);
+                    break;
+                default:
+                    break;
+            }
+
+            return points;
         }
     }
 

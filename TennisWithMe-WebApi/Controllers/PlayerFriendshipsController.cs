@@ -73,6 +73,7 @@ namespace TennisWithMe_WebApi.Controllers
                 friendsPartReceivedModels.ForEach(x => x.IsFriendshipReceived = true);
 
                 friendsPartRequestedModels.AddRange(friendsPartReceivedModels);
+                friendsPartRequestedModels = friendsPartRequestedModels.OrderBy(x => x.FirstName).ToList();
                 return Ok<List<PlayerViewModel>>(friendsPartRequestedModels);
             }
             catch (Exception ex)

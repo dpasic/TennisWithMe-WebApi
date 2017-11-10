@@ -78,5 +78,47 @@ namespace TennisWithMe_WebApi.Controllers
                 }
             }
         }
+
+        [HttpGet]
+        [Route("Points")]
+        [TimerAspect]
+        public async Task<IHttpActionResult> GetTopPlayersByPoints(int top = 10, string userID = null)
+        {
+            using (var context = _timer.NewContext())
+            {
+                try
+                {
+                    var topPlayers = await _playersService.GetTopPlayersByPoints(top);
+                    var playerModels = _mapperToPlayerModel.Map<List<PlayerViewModel>>(topPlayers);
+
+                    return Ok<List<PlayerViewModel>>(playerModels);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
+        }
+
+        [HttpGet]
+        [Route("Wins")]
+        [TimerAspect]
+        public async Task<IHttpActionResult> GetTopPlayersByWins(int top = 10, string userID = null)
+        {
+            using (var context = _timer.NewContext())
+            {
+                try
+                {
+                    var topPlayers = await _playersService.GetTopPlayersByWins(top);
+                    var playerModels = _mapperToPlayerModel.Map<List<PlayerViewModel>>(topPlayers);
+
+                    return Ok<List<PlayerViewModel>>(playerModels);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
+        }
     }
 }

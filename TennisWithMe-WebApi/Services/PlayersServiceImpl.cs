@@ -41,7 +41,36 @@ namespace TennisWithMe_WebApi.Services
                     var players = GetPlayers(db).Where(x => x.Id != appUserID
                                     && (city == null || (x.City != null && x.City.ToLower().Contains(city)))
                                     && (gender == null || x.Gender == gender)
-                                    && (skill == null || x.Skill == skill)).ToList();
+                                    && (skill == null || x.Skill == skill))
+                                    .OrderBy(x => x.FirstName).ToList();
+                    return players;
+                });
+            }
+        }
+
+        [LoggerAspect]
+        public async Task<List<Player>> GetTopPlayersByPoints(int top)
+        {
+            using (var db = new ApplicationDbContext())
+            {
+                return await Task.Run(() =>
+                {
+                    var players = GetPlayers(db).Take(top)
+                                    .OrderByDescending(x => x.Points).ToList();
+                    return players;
+                });
+            }
+        }
+
+        [LoggerAspect]
+        public async Task<List<Player>> GetTopPlayersByWins(int top)
+        {
+            using (var db = new ApplicationDbContext())
+            {
+                return await Task.Run(() =>
+                {
+                    var players = GetPlayers(db).Take(top)
+                                    .OrderByDescending(x => x.WonGames).ToList();
                     return players;
                 });
             }
