@@ -11,6 +11,7 @@ namespace TennisWithMe_WebApi.Models
     public class ApplicationDbContext : IdentityDbContext<Player>
     {
         public DbSet<PlayersFriendship> PlayersFriendships { get; set; }
+        public DbSet<PlayersRating> PlayersRatings { get; set; }
         public DbSet<Match> Matches { get; set; }
 
         public ApplicationDbContext()

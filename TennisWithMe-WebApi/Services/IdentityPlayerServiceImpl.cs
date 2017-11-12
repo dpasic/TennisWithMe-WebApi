@@ -54,8 +54,8 @@ namespace TennisWithMe_WebApi.Services
                     targetPlayer.FirstName = model.FirstName;
                     targetPlayer.LastName = model.LastName;
                     targetPlayer.City = model.City;
-                    targetPlayer.Gender = EnumHelper<Gender>.GetEnumFromDescription(model.GenderDescription);
-                    targetPlayer.Skill = EnumHelper<Skill>.GetEnumFromDescription(model.SkillDescription);
+                    targetPlayer.Gender = model.Gender;
+                    targetPlayer.Skill = model.Skill;
                     targetPlayer.Summary = model.Summary;
                     targetPlayer.Age = model.Age;
 

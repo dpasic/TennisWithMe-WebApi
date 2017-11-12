@@ -26,7 +26,7 @@ namespace TennisWithMe_WebApi.Models
 
         public string Comment { get; set; }
         public string Result { get; set; }
-        public string Rating { get; set; }
+        public Rating? Rating { get; set; }
 
         public string ChallengerComment { get; set; }
         public string OpponentComment { get; set; }

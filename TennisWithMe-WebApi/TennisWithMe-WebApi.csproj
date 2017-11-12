@@ -256,6 +256,7 @@
     <Compile Include="Aspects\TimerAspect.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PlayerRatingsController.cs" />
     <Compile Include="Controllers\PlayersController.cs" />
     <Compile Include="Controllers\MatchesController.cs" />
     <Compile Include="Controllers\PlayerFriendshipsController.cs" />
@@ -267,11 +268,14 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\PlayersRating.cs" />
     <Compile Include="Models\Gender.cs" />
+    <Compile Include="Models\Rating.cs" />
     <Compile Include="Services\Interfaces\IIdentityPlayerService.cs" />
     <Compile Include="Services\Interfaces\IMatchesService.cs" />
     <Compile Include="Services\Interfaces\IPlayerFriendshipsService.cs" />
+    <Compile Include="Services\Interfaces\IPlayerRatingsService.cs" />
     <Compile Include="Services\Interfaces\IPlayersService.cs" />
     <Compile Include="Services\MatchesServiceImpl.cs" />
+    <Compile Include="Services\PlayerRatingsServiceImpl.cs" />
     <Compile Include="Services\PlayersServiceImpl.cs" />
     <Compile Include="Services\PlayerFriendshipsServiceImpl.cs" />
     <Compile Include="Services\IdentityPlayerServiceImpl.cs" />
@@ -289,6 +293,7 @@
     <Compile Include="ViewModels\MatchViewModel.cs" />
     <Compile Include="ViewModels\PlayersFriendshipViewModel.cs" />
     <Compile Include="ViewModels\PlayerViewModel.cs" />
+    <Compile Include="ViewModels\PlayersRatingViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />

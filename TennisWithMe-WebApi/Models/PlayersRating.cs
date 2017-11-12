@@ -17,6 +17,6 @@ namespace TennisWithMe_WebApi.Models
         public virtual Player Rated { get; set; }
         public string RatedId { get; set; }
 
-        public double Rating { get; set; } // From 1 to 5
+        public Rating Rating { get; set; }
     }
 }

@@ -34,7 +34,6 @@ namespace TennisWithMe_WebApi.ViewModels
         public string UserName { get; set; }
 
         public Skill? Skill { get; set; }
-        [NotMapped]
         public String SkillDescription
         {
             get
@@ -48,7 +47,6 @@ namespace TennisWithMe_WebApi.ViewModels
         }
 
         public Gender? Gender { get; set; }
-        [NotMapped]
         public String GenderDescription
         {
             get
