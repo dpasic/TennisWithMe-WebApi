@@ -42,7 +42,7 @@ namespace TennisWithMe_WebApi.Controllers
         [HttpGet]
         [Route("")]
         [TimerAspect]
-        public async Task<IHttpActionResult> GetPlayerRatingForFriendId(string friendId, string userID = null)
+        public async Task<IHttpActionResult> GetPlayersRatingForFriendId(string friendId, string userID = null)
         {
             string appUserID = (userID == null) ? User.Identity.GetUserId() : userID;
 
