@@ -138,7 +138,6 @@ namespace TennisWithMe_WebApi.Services
                         UpdateResultsForPlayer(opponent, challenger, oldWinnerId, newWinnerId);
 
                         db.SaveChanges();
-
                         transaction.Commit();
                     });
                 }

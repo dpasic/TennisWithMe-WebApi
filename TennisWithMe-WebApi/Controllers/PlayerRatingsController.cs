@@ -42,13 +42,13 @@ namespace TennisWithMe_WebApi.Controllers
         [HttpGet]
         [Route("")]
         [TimerAspect]
-        public async Task<IHttpActionResult> GetPlayersRatingForFriendId(string friendId, string userID = null)
+        public async Task<IHttpActionResult> GetPlayersRatingForPlayerId(string playerId, string userID = null)
         {
             string appUserID = (userID == null) ? User.Identity.GetUserId() : userID;
 
             try
             {
-                var playersRating = await _playerRatingsService.GetPlayersRatingForIdAndFriendId(appUserID, friendId);
+                var playersRating = await _playerRatingsService.GetPlayersRatingForIdAndPlayerId(appUserID, playerId);
                 var playersRatingModel = _mapperToModel.Map<PlayersRatingViewModel>(playersRating);
 
                 return Ok<PlayersRatingViewModel>(playersRatingModel);
@@ -62,8 +62,11 @@ namespace TennisWithMe_WebApi.Controllers
         [HttpPut]
         [Route("")]
         [TimerAspect]
-        public async Task<IHttpActionResult> CreateOrUpdatePlayersRating(PlayersRatingViewModel model)
+        public async Task<IHttpActionResult> CreateOrUpdatePlayersRating(PlayersRatingViewModel model, string userID = null)
         {
+            string appUserID = (userID == null) ? User.Identity.GetUserId() : userID;
+            model.ReviewerId = appUserID;
+
             try
             {
                 var playersRating = _mapperToEntity.Map<PlayersRating>(model);

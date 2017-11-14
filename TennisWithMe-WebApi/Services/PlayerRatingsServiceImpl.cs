@@ -23,22 +23,13 @@ namespace TennisWithMe_WebApi.Services
             _playersRatings = playersRatings;
         }
 
-        private IEnumerable<PlayersRating> GetPlayersRatings(ApplicationDbContext db)
-        {
-            if (_playersRatings == null)
-            {
-                return db.PlayersRatings;
-            }
-            return _playersRatings;
-        }
-
-        public async Task<PlayersRating> GetPlayersRatingForIdAndFriendId(string appUserID, string friendId)
+        public async Task<PlayersRating> GetPlayersRatingForIdAndPlayerId(string appUserID, string friendId)
         {
             using (var db = new ApplicationDbContext())
             {
                 return await Task.Run(() =>
                 {
-                    var playersRating = GetPlayersRatings(db).SingleOrDefault(x => x.ReviewerId == appUserID && x.RatedId == friendId);
+                    var playersRating = db.PlayersRatings.SingleOrDefault(x => x.ReviewerId == appUserID && x.RatedId == friendId);
                     return playersRating;
                 });
             }
@@ -47,11 +38,12 @@ namespace TennisWithMe_WebApi.Services
         public async Task CreateOrUpdatePlayersRating(PlayersRatingViewModel model, PlayersRating entity)
         {
             using (var db = new ApplicationDbContext())
+            using (var transaction = db.Database.BeginTransaction())
             {
                 await Task.Run(() =>
                 {
-                    var playersRating = GetPlayersRatings(db).SingleOrDefault(x => x.ReviewerId == model.ReviewerId && x.RatedId == model.RatedId);
-                    
+                    var playersRating = db.PlayersRatings.SingleOrDefault(x => x.ReviewerId == model.ReviewerId && x.RatedId == model.RatedId);
+
                     // Add or update rating
                     if (playersRating == null)
                     {
@@ -61,10 +53,12 @@ namespace TennisWithMe_WebApi.Services
                     {
                         playersRating.Rating = model.Rating;
                     }
-                    
+
+                    db.SaveChanges();
+
                     // Update players overall rating
                     var ratedPlayer = db.Users.SingleOrDefault(x => x.Id == model.RatedId);
-                    var ratedPlayerRatings = GetPlayersRatings(db).Where(x => x.RatedId == model.RatedId).ToList();
+                    var ratedPlayerRatings = db.PlayersRatings.Where(x => x.RatedId == model.RatedId).ToList();
 
                     int counter = 0, ratingSum = 0;
                     foreach (var item in ratedPlayerRatings)
@@ -82,6 +76,7 @@ namespace TennisWithMe_WebApi.Services
                     ratedPlayer.OverallRating = ratingSum / (double)counter;
 
                     db.SaveChanges();
+                    transaction.Commit();
                 });
             }
         }
