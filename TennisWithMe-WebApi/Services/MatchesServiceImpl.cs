@@ -122,7 +122,7 @@ namespace TennisWithMe_WebApi.Services
                         var newWinnerId = model.WinnerId;
 
                         targetMatch.CityPlayed = model.CityPlayed;
-                        targetMatch.Comment = model.CityPlayed;
+                        targetMatch.Comment = model.Comment;
                         targetMatch.Rating = model.Rating;
                         targetMatch.Result = model.Result;
                         targetMatch.WinnerId = model.WinnerId;
